@@ -1,5 +1,7 @@
 import { Plus, Star, Flame, Leaf } from 'lucide-react';
 import { Product } from '@/types';
+import Link from 'next/link';
+import { useState } from 'react';
 
 interface ProductCardProps {
   product: Product;
@@ -7,151 +9,132 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, onAddToCart }: ProductCardProps) {
+  const [imageError, setImageError] = useState(false);
+  const [imageSrc, setImageSrc] = useState(product.image || '/images/pizza-placeholder.jpg');
+
   const getIngredientIcon = (ingredient: string) => {
     const lowerIngredient = ingredient.toLowerCase();
     const icons: { [key: string]: string } = {
       // Fromages
-      'mozzarella': '🧀',
-      'emmental': '🧀',
-      'chèvre': '🐐',
-      'roquefort': '🧀',
-      'parmesan': '🧀',
-      'raclette': '🧀',
-      'brousse': '🧀',
+      'mozzarella': '🧀', 'emmental': '🧀', 'chèvre': '🐐', 'roquefort': '🧀',
+      'parmesan': '🧀', 'raclette': '🧀', 'brousse': '🧀',
 
       // Légumes
-      'tomate': '🍅',
-      'tomates fraîches': '🍅',
-      'tomates cerise': '🍅',
-      'tomate fraîche': '🍅',
-      'champignons': '🍄',
-      'champignons de paris': '🍄',
-      'poivron': '🫑',
-      'poivrons': '🫑',
-      'oignons': '🧅',
-      'ail': '🧄',
-      'aubergines grillées': '🍆',
-      'artichauts': '🥬',
-      'olives': '🫒',
+      'tomate': '🍅', 'tomates fraîches': '🍅', 'tomates cerise': '🍅',
+      'tomate fraîche': '🍅', 'champignons': '🍄', 'champignons de paris': '🍄',
+      'poivron': '🫑', 'poivrons': '🫑', 'oignons': '🧅', 'ail': '🧄',
+      'aubergines grillées': '🍆', 'artichauts': '🥬', 'olives': '🫒',
 
       // Herbes et Épices
-      'basilic': '🌿',
-      'persil': '🌿',
-      'herbes de provence': '🌿',
-      'câpres': '🌿',
+      'basilic': '🌿', 'persil': '🌿', 'herbes de provence': '🌿', 'câpres': '🌿',
 
       // Viandes
-      'jambon': '🥓',
-      'jambon cru': '🥓',
-      'lardons': '🥓',
-      'chorizo': '🌶️',
-      'merguez': '🌶️',
-      'viande hachée': '🥩',
-      'viande kebab': '🥙',
-      'poulet': '🍗',
-      'figatelli': '🥩',
+      'jambon': '🥓', 'jambon cru': '🥓', 'lardons': '🥓', 'chorizo': '🌶️',
+      'merguez': '🌶️', 'viande hachée': '🥩', 'viande kebab': '🥙',
+      'poulet': '🍗', 'figatelli': '🥩',
 
       // Poissons
-      'anchois': '🐟',
-      'thon': '🐟',
-      'saumon': '🐟',
-      'fruits de mer': '🦐',
+      'anchois': '🐟', 'thon': '🐟', 'saumon': '🐟', 'fruits de mer': '🦐',
 
       // Autres
-      'oeuf': '🥚',
-      'miel': '🍯',
-      'crème fraîche': '🥛',
-      'sauce curry': '🍛',
-      "huile d'olive": '🫒',
-      'amandes': '🌰',
+      'oeuf': '🥚', 'miel': '🍯', 'crème fraîche': '🥛', 'sauce curry': '🍛',
+      "huile d'olive": '🫒', 'amandes': '🌰',
     };
     return icons[lowerIngredient] || '✨';
   };
 
   return (
-    <div className="group bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
-      <div className="relative overflow-hidden aspect-[4/3]">
+    <div className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl border border-gray-100 overflow-hidden transition-all duration-300 h-full flex flex-col hover:-translate-y-1">
+      <Link href={`/products/${product._id}`} className="relative overflow-hidden aspect-[4/3] cursor-pointer bg-gray-100">
         <img
-          src={product.image || '/images/pizza-placeholder.jpg'}
+          src={imageSrc}
           alt={product.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300"
           loading="lazy"
+          onError={() => {
+            if (!imageError) {
+              setImageError(true);
+              setImageSrc('/images/pizza-placeholder.jpg');
+            }
+          }}
         />
-        {/* Clean overlay on hover */}
-        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
+        
         {/* Badges */}
-        <div className="absolute top-4 left-4 flex flex-col gap-2">
+        <div className="absolute top-3 left-3 flex gap-1.5">
           {product.popular && (
-            <span className="bg-gradient-to-r from-soft-yellow to-primary-yellow text-charcoal px-4 py-2 rounded-full text-sm font-bold flex items-center space-x-2 shadow-xl backdrop-blur-sm">
-              <Star className="w-4 h-4 fill-current" />
+            <span className="bg-primary-yellow text-charcoal px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg">
+              <Star className="w-3 h-3 fill-current" />
               <span>Populaire</span>
             </span>
           )}
           {product.spicy && (
-            <span className="bg-gradient-to-r from-soft-red to-primary-red text-white px-4 py-2 rounded-full text-sm font-bold flex items-center space-x-2 shadow-xl backdrop-blur-sm">
-              <Flame className="w-4 h-4" />
+            <span className="bg-primary-red text-white px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg">
+              <Flame className="w-3 h-3" />
               <span>Épicé</span>
             </span>
           )}
           {product.vegetarian && (
-            <span className="bg-gradient-to-r from-soft-green to-basil-light text-white px-4 py-2 rounded-full text-sm font-bold flex items-center space-x-2 shadow-xl backdrop-blur-sm">
-              <Leaf className="w-4 h-4" />
+            <span className="bg-basil-light text-white px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg">
+              <Leaf className="w-3 h-3" />
               <span>Végétarien</span>
             </span>
           )}
         </div>
 
-        {/* Price Badge */}
-        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-4 py-3 rounded-2xl shadow-xl">
-          <span className="text-2xl font-black text-primary-red">
+        {/* Price */}
+        <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm px-3 py-2 rounded-xl shadow-xl border border-gray-200">
+          <span className="text-xl font-bold text-gray-900">
             {product.price}€
           </span>
         </div>
-      </div>
+      </Link>
 
-      <div className="p-6 space-y-4">
-        <div>
-          <h3 className="text-2xl font-black text-charcoal mb-2 group-hover:text-primary-red transition-colors">
+      <div className="p-5 flex flex-col flex-1">
+        <Link href={`/products/${product._id}`} className="space-y-2 mb-4 cursor-pointer">
+          <h3 className="text-xl font-bold text-gray-900 line-clamp-1 group-hover:text-gray-700 transition-colors">
             {product.name}
           </h3>
-          <p className="text-gray-600 leading-relaxed">{product.description}</p>
-        </div>
+          <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">
+            {product.description}
+          </p>
+        </Link>
 
-        {/* Ingrédients avec icônes - Improved */}
+        {/* Ingredients */}
         {product.ingredients && product.ingredients.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            {product.ingredients.slice(0, 4).map(ingredient => (
+          <div className="flex flex-wrap gap-1 mb-4">
+            {product.ingredients.map(ingredient => (
               <span
                 key={ingredient}
-                className="bg-gradient-to-br from-soft-yellow-lighter to-soft-red-lighter text-charcoal px-3 py-2 rounded-xl text-sm font-medium flex items-center space-x-2 border border-soft-yellow-light"
+                className="bg-gray-50 text-gray-700 px-1.5 py-1 rounded-lg text-xs font-medium flex items-center gap-1 border border-gray-200"
               >
-                <span className="text-base">{getIngredientIcon(ingredient)}</span>
-                <span className="capitalize">{ingredient}</span>
+                <span className="text-xs">{getIngredientIcon(ingredient)}</span>
+                <span className="capitalize text-xs">{ingredient}</span>
               </span>
             ))}
-            {product.ingredients.length > 4 && (
-              <span className="bg-soft-red-lighter text-soft-red px-3 py-2 rounded-xl text-sm font-bold">
-                +{product.ingredients.length - 4}
-              </span>
-            )}
           </div>
         )}
 
-        <button
-          onClick={() => onAddToCart(product)}
-          disabled={!product.available}
-          className="w-full bg-primary-red hover:bg-primary-red-dark text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-        >
-          <Plus className="w-5 h-5" />
-          <span>Ajouter au panier</span>
-        </button>
+        <div className="mt-auto space-y-3">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onAddToCart(product);
+            }}
+            disabled={!product.available}
+            suppressHydrationWarning
+            className="w-full lg:w-auto lg:px-6 bg-gradient-to-r from-charcoal to-gray-800 hover:from-primary-red hover:to-primary-yellow text-white hover:text-charcoal py-3 rounded-xl font-bold flex items-center justify-center lg:justify-start gap-2 transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer text-sm shadow-lg hover:shadow-2xl hover:scale-105"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Ajouter au panier</span>
+          </button>
 
-        {!product.available && (
-          <div className="bg-soft-red-lighter border border-soft-red rounded-2xl p-3 text-center">
-            <p className="text-primary-red font-bold text-sm">Temporairement indisponible</p>
-          </div>
-        )}
+          {!product.available && (
+            <div className="bg-gray-100 border border-gray-300 rounded-xl p-3 text-center">
+              <p className="text-gray-600 font-medium text-sm">Indisponible</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -1,256 +1,189 @@
-# Claude Code - Best Practices & Rules 🚀
+# CLAUDE.md
 
-This document contains guidelines for efficient collaboration with Claude Code to save tokens and follow good development practices.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
----
+## Code Style & Conventions
 
-## 📋 Token Management Rules
-
-### ⚠️ IMPORTANT: Custom Project Rules
-
-### Code Style
 - **TypeScript:** Always use interfaces over types
 - **Functions:** Prefer arrow functions
 - **Line Length:** Maximum 100 characters
 - **Quotes:** Use single quotes over double quotes
+- **Naming:** Prefer verbose variable names over short ones (e.g., `userEmail` not `ue`)
+- **Comments:** Explain complex logic with clear comments
+- **HTML:** Use semantic HTML elements (header, nav, main, section, article, footer)
 
-### Project Rules
+## Project Rules
+
 - **Images:** All images must be under 500KB
 - **Loading States:** Always add loading states for async operations
 - **Mobile Testing:** Test on mobile before committing
-- **HTML:** Use semantic HTML elements (header, nav, main, section, article, footer)
-
-### Personal Preferences
-- **Comments:** Explain complex logic with clear comments
 - **Architecture:** Ask before making major architecture changes
 - **Git:** Always show me the git diff before committing
-- **Naming:** Prefer verbose variable names over short ones (e.g., `userEmail` not `ue`)
-
-### Token Saving Rules
-- **Efficiency:** Don't re-explain things I already know
-- **Summaries:** Be concise in summaries
-- **File Reads:** Only read files when absolutely necessary
-- **Task Batching:** Batch related tasks together to minimize back-and-forth
 
 ---
 
-## 💡 General Best Practices for Beginners
+## Tech Stack
 
-### 1. **Be Specific in Your Requests**
-- ✅ Good: "Add a loading spinner to the menu page while products are fetching"
-- ❌ Avoid: "Make it better"
+- **Next.js 15.5.4** (App Router) with React 19
+- **TypeScript** for type safety
+- **Tailwind CSS 4.0** for styling
+- **MongoDB** with Mongoose for data persistence
+- **react-hot-toast** for notifications
+- **Lucide React** for icons
 
-### 2. **Break Down Large Tasks**
-- Instead of: "Build a complete checkout system"
-- Better:
-  1. "Create the checkout page layout"
-  2. "Add form validation"
-  3. "Integrate payment API"
+## Development Commands
 
-### 3. **Token Saving Tips**
-- Use `Read` tool only when necessary (Claude remembers recent files)
-- Be concise in explanations when possible
-- Use "/help" command for quick references instead of asking
-- Avoid re-reading files that were just edited
+```bash
+npm run dev              # Start dev server (standard webpack - stable)
+npm run dev:turbo        # Start dev server with Turbopack (experimental, may fail on Windows)
+npm run build            # Build for production
+npm run start            # Start production server
+npm run lint             # Run ESLint
+npm run test             # Run tests with Vitest
+npm run test:ui          # Run tests with UI
+npm run test:coverage    # Run tests with coverage report
+npm run seed             # Seed database with products (runs scripts/seedProducts.ts)
+npm run seed:admin       # Create admin user
+npm run verify-images    # Check for missing product images
+npm run update:images    # Update all products with local images from public/images
+npm run check:images     # Check first 5 products' image URLs
+```
 
-### 4. **File Management**
-- Keep file structure organized
-- Use clear, descriptive file names
-- Group related components in folders
+**Note:** Turbopack has known issues on Windows (exit code 0xc0000142). Use `npm run dev` for stable development.
 
-### 5. **Git Workflow**
-- Commit often with clear messages
-- Don't commit sensitive files (.env, credentials)
-- Use `.gitignore` properly
+## Architecture Overview
 
----
+### State Management
+- **Cart State:** Managed via `useCart` hook (hooks/useCart.ts) with localStorage persistence
+- **Client-side State:** React hooks (useState, useEffect)
+- **No global state management library** - local state per component
 
-## 🎯 Project-Specific Guidelines
+### Database Layer
+- **Connection:** Singleton pattern in lib/mongodb.ts with connection caching for Next.js
+- **Models:** Mongoose schemas in models/ directory:
+  - `Product`: Products with categories (pizza, boisson, dessert, accompagnement)
+  - `Order`: Orders with items, customer info, delivery details, and status tracking
+  - `User`: User accounts with roles (admin, customer)
 
-### Current Project: Pizza Truck App
+### API Routes (app/api/)
+- `/api/products` - GET all products, POST new product
+- `/api/products/[id]` - GET/PUT/DELETE single product
+- `/api/orders` - GET all orders, POST new order
+- `/api/orders/[id]` - GET/PUT single order
+- `/api/auth/[...nextauth]` - NextAuth authentication
+- `/api/admin/stats` - Admin dashboard statistics
+- `/api/upload` - Image upload handling
 
-**Tech Stack:**
-- Next.js 15.5.4 (App Router)
-- React 19
-- TypeScript
-- Tailwind CSS 4.0
-- MongoDB + Mongoose
-- Lucide React (icons)
+### Type System
+- **Central types:** Defined in types/index.ts
+- **Key interfaces:** Product, CartItem, Order, OrderItem, DeliveryAddress
+- All components use these shared interfaces for type safety
 
-**Design System:**
-- **Brand Colors:**
-  - Primary Red: `#E30613`
-  - Primary Yellow: `#FFD200`
-  - Soft Red: `#F2828B` (for modern UI)
-  - Soft Yellow: `#FFE999` (for modern UI)
-  - Warm Cream: `#FFF9F0` (backgrounds)
+### Cart System
+The cart hook (hooks/useCart.ts) provides:
+- `addItem(product)` - Add/increment product
+- `removeItem(productId)` - Remove product from cart
+- `updateQuantity(productId, quantity)` - Update quantity
+- `clearCart()` - Empty cart
+- `getTotalItems()` - Total item count
+- `getTotalPrice()` - Total price calculation
+- Cart persists to localStorage automatically
 
-- **Design Principles:**
-  - Soft, elegant gradients
-  - Glass-morphism effects (backdrop-blur)
-  - Rounded corners (rounded-2xl, rounded-3xl)
-  - Smooth animations (300-500ms transitions)
-  - Hover effects with scale/translate
+## Design System
 
-**File Structure:**
+### Tailwind Configuration (tailwind.config.js)
+Custom color palette defined:
+- **primary:** red (#E30613), yellow (#FFD200) with dark/light variants
+- **soft:** red (#F2828B), yellow (#FFE999) with lighter variants
+- **basil:** green (#2D5016) for vegetarian indicators
+- **cream/warm-cream:** Background colors (#FFF5E6, #FFF9F0)
+
+### Design Philosophy
+**IMPORTANT:** All design implementations must be:
+- **Authentic:** True to Italian pizza culture and food truck aesthetics
+- **Clean:** Minimalist, uncluttered layouts with clear visual hierarchy
+- **Professional:** Polished, modern UI without excessive decoration
+- **Functional:** Every element serves a purpose - no unnecessary embellishments
+- Avoid overly playful or gimmicky elements unless specifically requested
+- Prioritize readability and usability over visual complexity
+
+### Design Patterns
+- Glass-morphism effects: `bg-white/70 backdrop-blur`
+- Rounded corners: `rounded-2xl`, `rounded-3xl`
+- Smooth animations: `transition-all duration-300`
+- Hover effects: `hover:shadow-2xl`, `transform hover:-translate-y-2`, `hover:scale-105`
+- Gradient buttons: `bg-gradient-to-r from-primary-red to-soft-red`
+
+## File Organization
+
 ```
 app/
-  ├── page.tsx              # Homepage
-  ├── menu/page.tsx         # Menu page
-  ├── about/page.tsx        # About page
-  ├── contact/page.tsx      # Contact page
-  ├── cart/page.tsx         # Cart page (to build)
-  └── api/
-      └── products/route.ts # Products API
+  ├── (pages)/              # Public pages
+  ├── admin/                # Admin dashboard pages
+  ├── api/                  # API routes
+  └── layout.tsx            # Root layout with Navigation, Footer, Toaster
 
 components/
-  ├── layout/
-  │   ├── Navigation.tsx    # Header
-  │   └── Footer.tsx        # Footer
-  ├── menu/
-  │   ├── ProductCard.tsx   # Product card
-  │   └── CategoryFilter.tsx
-  └── cart/
-      └── CartSidebar.tsx
+  ├── admin/                # Admin-specific components
+  ├── cart/                 # Cart components (CartSidebar, CartItem)
+  ├── layout/               # Layout components (Navigation, Footer)
+  ├── menu/                 # Menu components (ProductCard, CategoryFilter)
+  └── providers/            # Context providers (AuthProvider)
+
+hooks/
+  └── useCart.ts            # Cart management hook
 
 lib/
-  └── mongodb.ts            # Database connection
+  └── mongodb.ts            # Database connection singleton
 
-models/
-  └── Product.ts            # Product schema
+models/                     # Mongoose schemas
+  ├── Product.ts
+  ├── Order.ts
+  └── User.ts
 
-public/images/
+types/
+  └── index.ts              # Shared TypeScript interfaces
+
+scripts/
+  └── seedProducts.ts       # Database seeding script
+
+public/images/              # Static product images
   ├── pizzas/
   ├── boissons/
   ├── desserts/
   └── accompagnements/
 ```
 
----
+## Order Flow
 
-## 🔧 Development Workflow
+1. **Browse Menu** (app/menu/page.tsx) → Filter by category → View products
+2. **Add to Cart** → useCart hook adds item → Persists to localStorage
+3. **View Cart** (app/cart/page.tsx) → Review items → Adjust quantities
+4. **Checkout** (app/checkout/page.tsx) → Enter delivery details → Submit order
+5. **Order Confirmation** (app/order-confirmation/[id]/page.tsx) → Display order details
+6. **Admin Dashboard** (app/admin/orders/page.tsx) → Track order status
 
-### Starting Development
-```bash
-npm run dev          # Start dev server
-npm run build        # Build for production
-npm run seed         # Seed database with products
-npm run verify-images # Check missing images
-```
+### Order Status Lifecycle
+`pending` → `confirmed` → `preparing` → `ready` → `completed`
+(Can be `cancelled` at any point)
 
-### When Working on Features
-1. **Plan First:** Outline the feature requirements
-2. **Use Todo List:** Track tasks with TodoWrite tool
-3. **Test Incrementally:** Test after each major change
-4. **Commit Often:** Small, focused commits
+## Environment Variables
 
-### Code Review Checklist
-- [ ] TypeScript types defined
-- [ ] Responsive design (mobile-first)
-- [ ] Accessibility (ARIA labels, keyboard navigation)
-- [ ] Error handling implemented
-- [ ] Loading states added
-- [ ] Consistent styling with design system
+Required in `.env.local`:
+- `MONGODB_URI` - MongoDB connection string
 
----
+## Key Implementation Details
 
-## 📝 Communication Tips
+### MongoDB Connection Pattern
+The connection singleton (lib/mongodb.ts) uses a global cache to prevent connection leaks in Next.js development mode where hot reloading can create multiple connections.
 
-### Efficient Communication
-- "Build X" → Claude creates the feature
-- "Fix Y error" → Claude debugs and fixes
-- "Optimize Z" → Claude improves performance
-- "Add tests for W" → Claude writes tests
+### Cart Persistence
+The useCart hook uses two useEffect hooks:
+1. Load cart from localStorage on mount
+2. Save cart to localStorage on every change
 
-### Status Updates
-- Ask "What's the current status?" for project overview
-- Use "Show me X" to review specific code
-- Request "List remaining tasks" to see what's left
+### Product Categories
+Products have 4 fixed categories: 'pizza', 'boisson', 'dessert', 'accompagnement'. The category filter and product queries use these exact strings.
 
-### Getting Unstuck
-- "I'm seeing error X, help debug"
-- "This feature isn't working as expected: [describe]"
-- "Can you explain how X works?"
-
----
-
-## 🎨 Design Consistency
-
-### Always Use Design System Colors
-```css
-/* Instead of arbitrary colors */
-bg-red-500 ❌
-
-/* Use design system */
-bg-primary-red ✅
-bg-soft-red ✅
-```
-
-### Component Patterns
-```tsx
-// Modern card pattern
-<div className="bg-white/70 backdrop-blur rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-  {/* Content */}
-</div>
-
-// Button pattern
-<button className="bg-gradient-to-r from-primary-red to-soft-red text-white px-10 py-5 rounded-2xl font-bold hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
-  Button Text
-</button>
-```
-
----
-
-## 🚨 Common Pitfalls to Avoid
-
-1. **Don't commit .env files** → Use .gitignore
-2. **Don't hardcode API keys** → Use environment variables
-3. **Don't forget error handling** → Always add try/catch
-4. **Don't skip TypeScript types** → Define interfaces
-5. **Don't ignore mobile responsive** → Test on different sizes
-
----
-
-## 📚 Resources
-
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
-- [MongoDB Documentation](https://docs.mongodb.com)
-- [React Documentation](https://react.dev)
-
----
-
-## 🎯 Next Steps
-
-**Phase 2 (Current):**
-- [ ] Build cart page
-- [ ] Create checkout flow
-- [ ] Add payment integration
-- [ ] Order confirmation system
-- [ ] Order tracking page
-
-**Phase 3:**
-- [ ] Product customization (sizes, toppings)
-- [ ] Reviews and ratings
-- [ ] Special offers/promotions
-
----
-
-## 💬 Need Help?
-
-- Type `/help` in Claude Code for commands
-- Ask Claude to explain any concept
-- Request code reviews
-- Ask for best practices on specific topics
-
----
-
-**Remember:** The goal is to build efficiently while learning. Don't hesitate to ask questions or request explanations!
-
----
-
-## ✨ Your Custom Rules
-
-**Add your specific requirements below this line:**
-
----
+### Image Management
+Product images are stored in public/images/ with subdirectories by category. The verify-images script checks for missing images referenced in the database.

@@ -13,14 +13,16 @@ const OrderItemSchema = new mongoose.Schema({
 });
 
 const OrderSchema = new mongoose.Schema({
-  customer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  customer: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  customerName: { type: String, required: true },
+  email: { type: String },
   items: [OrderItemSchema],
   subtotal: { type: Number, required: true },
   tax: { type: Number, default: 0 },
   deliveryFee: { type: Number, default: 0 },
   total: { type: Number, required: true },
-  status: { 
-    type: String, 
+  status: {
+    type: String,
     enum: ['pending', 'confirmed', 'preparing', 'ready', 'completed', 'cancelled'],
     default: 'pending'
   },
@@ -34,13 +36,19 @@ const OrderSchema = new mongoose.Schema({
     enum: ['card', 'cash', 'online'],
     default: 'cash'
   },
+  deliveryType: {
+    type: String,
+    enum: ['delivery', 'pickup'],
+    required: true,
+    default: 'pickup'
+  },
   deliveryAddress: {
     street: String,
     city: String,
     postalCode: String,
     country: String
   },
-  phone: String,
+  phone: { type: String, required: true },
   notes: String,
   estimatedDelivery: Date,
 }, { timestamps: true });

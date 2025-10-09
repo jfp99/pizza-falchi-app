@@ -1,14 +1,15 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import connectDB from '@/lib/mongodb';
+import { authOptions } from '@/lib/auth';
+import { connectDB } from '@/lib/mongodb';
 import Order from '@/models/Order';
 import Product from '@/models/Product';
 import User from '@/models/User';
 
 export async function GET() {
   try {
-    const session = await getServerSession();
-    if (!session || (session.user as any).role !== 'admin') {
+    const session = await getServerSession(authOptions);
+    if (!session || session.user.role !== 'admin') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -34,7 +35,7 @@ export async function GET() {
 
     return NextResponse.json({
       totalOrders,
-      totalRevenue: revenue.toFixed(2),
+      totalRevenue: parseFloat(revenue.toFixed(2)),
       totalProducts,
       totalCustomers,
       pendingOrders,

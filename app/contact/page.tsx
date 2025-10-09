@@ -4,20 +4,67 @@ import { MapPin, Phone, Mail, Clock, Send, MessageSquare, Calendar, Instagram, F
 export default function Contact() {
   return (
     <div className="min-h-screen bg-warm-cream">
-      {/* Hero Section - Clean */}
-      <section className="bg-white py-20 border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="inline-block mb-6">
-            <span className="bg-primary-red text-white px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wider">
+      {/* Hero Section - Enhanced with Gradient */}
+      <section className="relative bg-gradient-to-r from-charcoal via-gray-800 to-charcoal py-24 md:py-32 overflow-hidden">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-full opacity-10">
+            <div className="absolute top-20 left-20 w-64 h-64 bg-primary-red rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute bottom-20 right-20 w-80 h-80 bg-primary-yellow rounded-full blur-3xl animate-pulse" style={{animationDelay: '1.5s'}}></div>
+            <div className="absolute top-1/2 left-1/3 w-96 h-96 bg-soft-red rounded-full blur-3xl animate-pulse" style={{animationDelay: '0.5s'}}></div>
+          </div>
+
+          {/* Floating Icons */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-32 left-12 text-white/5 text-6xl animate-bounce" style={{animationDuration: '3s'}}>
+              <Phone className="w-16 h-16" />
+            </div>
+            <div className="absolute bottom-32 right-12 text-white/5 text-6xl animate-bounce" style={{animationDuration: '4s', animationDelay: '1s'}}>
+              <Mail className="w-16 h-16" />
+            </div>
+            <div className="absolute top-1/2 right-24 text-white/5 text-6xl animate-bounce" style={{animationDuration: '3.5s', animationDelay: '0.5s'}}>
+              <MessageSquare className="w-16 h-16" />
+            </div>
+          </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 text-center relative z-10">
+          <div className="inline-block mb-6 backdrop-blur-md bg-primary-red/90 rounded-full px-6 py-2 border border-primary-red shadow-lg">
+            <span className="text-white text-sm font-bold uppercase tracking-wider">
               Contactez-nous
             </span>
           </div>
-          <h1 className="text-5xl md:text-7xl font-black text-charcoal mb-6">
-            Restons en <span className="text-primary-red">Contact</span>
+          <h1 className="text-5xl md:text-7xl font-black text-white mb-6 drop-shadow-2xl">
+            Restons en <span className="text-primary-yellow drop-shadow-lg">Contact</span>
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto drop-shadow-lg font-medium mb-10">
             Une question ? Une suggestion ? Nous sommes à votre écoute !
           </p>
+
+          {/* Quick Contact Actions */}
+          <div className="flex flex-wrap justify-center gap-4">
+            <a
+              href="tel:+33442920308"
+              className="backdrop-blur-md bg-white/10 hover:bg-white/20 border border-white/30 text-white px-6 py-3 rounded-2xl font-semibold transition-all flex items-center gap-2 shadow-lg hover:scale-105"
+            >
+              <Phone className="w-5 h-5" />
+              <span>Appelez-nous</span>
+            </a>
+            <a
+              href="mailto:pizzafalchipro@gmail.com"
+              className="backdrop-blur-md bg-white/10 hover:bg-white/20 border border-white/30 text-white px-6 py-3 rounded-2xl font-semibold transition-all flex items-center gap-2 shadow-lg hover:scale-105"
+            >
+              <Mail className="w-5 h-5" />
+              <span>Envoyez un mail</span>
+            </a>
+          </div>
+        </div>
+
+        {/* Bottom Wave Effect */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
+            <path d="M0 0L60 10C120 20 240 40 360 46.7C480 53 600 47 720 43.3C840 40 960 40 1080 46.7C1200 53 1320 67 1380 73.3L1440 80V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0V0Z" fill="#FFF9F0"/>
+          </svg>
         </div>
       </section>
 
@@ -43,9 +90,9 @@ export default function Contact() {
             {/* Contact Info */}
             <div className="space-y-6">
               {/* Contact Cards */}
-              <div className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+              <div className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 group">
                 <div className="flex items-start gap-4">
-                  <div className="bg-primary-red p-4 rounded-2xl">
+                  <div className="bg-primary-red p-4 rounded-2xl group-hover:scale-110 transition-transform duration-300">
                     <MapPin className="w-6 h-6 text-white" />
                   </div>
                   <div className="flex-1">
@@ -61,9 +108,9 @@ export default function Contact() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+              <div className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 group">
                 <div className="flex items-start gap-4">
-                  <div className="bg-primary-yellow p-4 rounded-2xl">
+                  <div className="bg-primary-yellow p-4 rounded-2xl group-hover:scale-110 transition-transform duration-300">
                     <Phone className="w-6 h-6 text-charcoal" />
                   </div>
                   <div className="flex-1">
@@ -78,9 +125,9 @@ export default function Contact() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+              <div className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 group">
                 <div className="flex items-start gap-4">
-                  <div className="bg-basil-light p-4 rounded-2xl">
+                  <div className="bg-basil-light p-4 rounded-2xl group-hover:scale-110 transition-transform duration-300">
                     <Mail className="w-6 h-6 text-white" />
                   </div>
                   <div className="flex-1">
@@ -96,70 +143,70 @@ export default function Contact() {
               </div>
 
               {/* Social Media */}
-              <div className="bg-primary-red rounded-3xl p-8 text-white shadow-xl">
-                <h3 className="text-2xl font-bold mb-4">Suivez-nous</h3>
-                <p className="text-white/90 mb-6">Restez informé de nos déplacements et nouveautés !</p>
-                <div className="flex gap-4">
+              <div className="bg-white rounded-3xl p-8 shadow-xl text-center">
+                <h3 className="text-2xl font-bold mb-4 text-charcoal">Suivez-nous</h3>
+                <p className="text-gray-600 mb-6">Restez informé de nos déplacements et nouveautés !</p>
+                <div className="flex justify-center gap-4">
                   <a
                     href="#"
-                    className="bg-white/10 hover:bg-white/20 p-4 rounded-2xl transition-all"
+                    className="bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 hover:scale-110 p-4 rounded-2xl transition-all shadow-lg"
                     aria-label="Instagram"
                   >
-                    <Instagram className="w-6 h-6" />
+                    <Instagram className="w-6 h-6 text-white" />
                   </a>
                   <a
                     href="#"
-                    className="bg-white/10 hover:bg-white/20 p-4 rounded-2xl transition-all"
+                    className="bg-blue-600 hover:bg-blue-700 hover:scale-110 p-4 rounded-2xl transition-all shadow-lg"
                     aria-label="Facebook"
                   >
-                    <Facebook className="w-6 h-6" />
+                    <Facebook className="w-6 h-6 text-white" />
                   </a>
                   <a
                     href="#"
-                    className="bg-white/10 hover:bg-white/20 p-4 rounded-2xl transition-all"
+                    className="bg-sky-500 hover:bg-sky-600 hover:scale-110 p-4 rounded-2xl transition-all shadow-lg"
                     aria-label="Twitter"
                   >
-                    <Twitter className="w-6 h-6" />
+                    <Twitter className="w-6 h-6 text-white" />
                   </a>
                 </div>
               </div>
             </div>
 
             {/* Hours & Schedule */}
-            <div className="space-y-6">
-              <div className="bg-white rounded-3xl p-8 shadow-lg">
+            <div className="flex flex-col gap-6">
+              <div className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 flex-1 flex flex-col">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="bg-primary-yellow p-4 rounded-2xl">
                     <Clock className="w-7 h-7 text-charcoal" />
                   </div>
                   <h3 className="text-2xl font-bold text-charcoal">Horaires d'ouverture</h3>
                 </div>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center py-3 border-b border-gray-100">
+                <div className="space-y-4 flex-1">
+                  <div className="flex justify-between items-center py-3 border-b border-gray-100 hover:bg-gray-50 px-2 rounded transition-colors">
                     <span className="font-semibold text-charcoal">Lundi</span>
                     <span className="text-gray-500 italic">Fermé</span>
                   </div>
-                  <div className="flex justify-between items-center py-3 border-b border-gray-100">
+                  <div className="flex justify-between items-center py-3 border-b border-gray-100 hover:bg-gray-50 px-2 rounded transition-colors">
                     <span className="font-semibold text-charcoal">Mardi</span>
                     <span className="text-gray-600">18h00 - 21h30</span>
                   </div>
-                  <div className="flex justify-between items-center py-3 border-b border-gray-100">
+                  <div className="flex justify-between items-center py-3 border-b border-gray-100 hover:bg-gray-50 px-2 rounded transition-colors">
                     <span className="font-semibold text-charcoal">Mercredi</span>
                     <span className="text-gray-600">18h00 - 21h30</span>
                   </div>
-                  <div className="flex justify-between items-center py-3 border-b border-gray-100">
+                  <div className="flex justify-between items-center py-3 border-b border-gray-100 hover:bg-gray-50 px-2 rounded transition-colors">
                     <span className="font-semibold text-charcoal">Jeudi</span>
                     <span className="text-gray-600">18h00 - 21h30</span>
                   </div>
-                  <div className="flex justify-between items-center py-3 border-b border-gray-100">
+                  <div className="flex justify-between items-center py-3 border-b border-gray-100 hover:bg-gray-50 px-2 rounded transition-colors">
                     <span className="font-semibold text-charcoal">Vendredi</span>
                     <span className="text-gray-600">18h00 - 21h30</span>
                   </div>
-                  <div className="flex justify-between items-center py-3 border-b border-gray-100">
+                  <div className="flex justify-between items-center py-3 border-b border-gray-100 hover:bg-gray-50 px-2 rounded transition-colors">
                     <span className="font-semibold text-charcoal">Samedi</span>
                     <span className="text-gray-600">18h00 - 21h30</span>
                   </div>
-                  <div className="flex justify-between items-center py-3">
+                  <div className="flex justify-between items-center py-3 hover:bg-gray-50 px-2 rounded transition-colors">
                     <span className="font-semibold text-charcoal">Dimanche</span>
                     <span className="text-gray-600">18h00 - 21h30</span>
                   </div>
@@ -167,23 +214,23 @@ export default function Contact() {
               </div>
 
               {/* Additional Info */}
-              <div className="bg-warm-cream rounded-3xl p-8 shadow-lg">
+              <div className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 flex-1 flex flex-col">
                 <h3 className="text-xl font-bold text-charcoal mb-4">Informations pratiques</h3>
-                <div className="space-y-3 text-gray-700">
-                  <div className="flex items-start gap-3">
-                    <span className="text-primary-red mt-1">✓</span>
+                <div className="space-y-3 text-gray-700 flex-1">
+                  <div className="flex items-start gap-3 hover:bg-gray-50 p-2 rounded transition-colors">
+                    <span className="text-primary-red mt-1 text-xl">✓</span>
                     <p>Commandes par téléphone acceptées</p>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <span className="text-primary-red mt-1">✓</span>
+                  <div className="flex items-start gap-3 hover:bg-gray-50 p-2 rounded transition-colors">
+                    <span className="text-primary-red mt-1 text-xl">✓</span>
                     <p>Paiement CB et espèces</p>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <span className="text-primary-red mt-1">✓</span>
+                  <div className="flex items-start gap-3 hover:bg-gray-50 p-2 rounded transition-colors">
+                    <span className="text-primary-red mt-1 text-xl">✓</span>
                     <p>Service sur place et à emporter</p>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <span className="text-primary-red mt-1">✓</span>
+                  <div className="flex items-start gap-3 hover:bg-gray-50 p-2 rounded transition-colors">
+                    <span className="text-primary-red mt-1 text-xl">✓</span>
                     <p>Possibilité de réservation pour groupes</p>
                   </div>
                 </div>
@@ -193,8 +240,8 @@ export default function Contact() {
         </div>
       </section>
 
-      {/* Events Section */}
-      <section className="py-20 bg-white">
+      {/* Events Section - HIDDEN FOR NOW */}
+      {/* <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4">
           <div className="bg-warm-cream rounded-3xl p-12 shadow-lg text-center">
             <Calendar className="w-20 h-20 text-primary-red mx-auto mb-6" />
@@ -227,7 +274,7 @@ export default function Contact() {
             </a>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* FAQ Section */}
       <section className="py-20 bg-warm-cream">
@@ -285,22 +332,37 @@ export default function Contact() {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* CTA Section - Softer Version */}
       <section className="py-20 bg-white">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-4xl md:text-5xl font-black text-charcoal mb-6">
+          {/* Icon */}
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-soft-red-lighter rounded-2xl mb-4">
+            <span className="text-3xl">🍕</span>
+          </div>
+
+          <h2 className="text-4xl md:text-5xl font-black text-charcoal mb-4">
             Vous avez faim ?
           </h2>
-          <p className="text-xl text-gray-600 mb-10">
-            Découvrez notre menu et commandez vos pizzas préférées
+          <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+            Découvrez notre menu et commandez vos pizzas artisanales préférées
           </p>
-          <Link
-            href="/menu"
-            className="inline-flex items-center gap-3 bg-primary-red hover:bg-primary-red-dark text-white px-10 py-5 rounded-2xl font-bold transition-all text-lg"
-          >
-            Voir le Menu
-            <span className="text-2xl">🍕</span>
-          </Link>
+
+          <div className="flex flex-col sm:flex-row justify-center gap-3">
+            <Link
+              href="/menu"
+              className="inline-flex items-center justify-center gap-2 bg-primary-red hover:bg-primary-red-dark text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+            >
+              Voir le Menu
+              <span>→</span>
+            </Link>
+            <Link
+              href="tel:+33442920308"
+              className="inline-flex items-center justify-center gap-2 border-2 border-primary-red bg-white text-primary-red px-8 py-4 rounded-2xl font-bold text-lg hover:bg-primary-red hover:text-white transition-all duration-300 shadow-lg hover:shadow-xl"
+            >
+              <Phone className="w-5 h-5" />
+              Appelez-nous
+            </Link>
+          </div>
         </div>
       </section>
     </div>

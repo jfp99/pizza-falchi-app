@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head><title>Test Cart</title></head>
+<body>
+<script>
+// Clear and add test data
+localStorage.clear();
+localStorage.setItem("pizza-cart", JSON.stringify([
+  {
+    product: {
+      _id: "test-123",
+      name: "Pizza Test",
+      price: 10.90,
+      category: "pizza",
+      ingredients: ["tomate", "mozzarella"],
+      available: true,
+      image: "/test.jpg"
+    },
+    quantity: 2
+  }
+]));
+console.log("Cart set:", localStorage.getItem("pizza-cart"));
+window.location.href = "http://localhost:3000/cart";
+</script>
+</body>
+</html>

@@ -7,9 +7,16 @@ export function useCart() {
 
   // Charger le panier depuis le localStorage au montage
   useEffect(() => {
-    const savedCart = localStorage.getItem('pizza-cart');
-    if (savedCart) {
-      setItems(JSON.parse(savedCart));
+    try {
+      const savedCart = localStorage.getItem('pizza-cart');
+      if (savedCart) {
+        setItems(JSON.parse(savedCart));
+      }
+    } catch (error) {
+      console.error('Error loading cart from localStorage:', error);
+      // If cart data is corrupted, start with empty cart
+      localStorage.removeItem('pizza-cart');
+      setItems([]);
     }
   }, []);
 
@@ -65,6 +72,10 @@ export function useCart() {
     return items.reduce((total, item) => total + (item.product.price * item.quantity), 0);
   };
 
+  const getTotal = () => {
+    return getTotalPrice();
+  };
+
   return {
     items,
     addItem,
@@ -72,6 +83,7 @@ export function useCart() {
     updateQuantity,
     clearCart,
     getTotalItems,
-    getTotalPrice
+    getTotalPrice,
+    getTotal
   };
 }

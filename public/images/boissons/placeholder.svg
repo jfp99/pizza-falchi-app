@@ -1,0 +1,11 @@
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="400" fill="#FFD200"/>
+  <circle cx="200" cy="180" r="80" fill="#E30613" opacity="0.2"/>
+  <circle cx="200" cy="200" r="80" fill="#E30613"/>
+  <text x="200" y="310" font-family="Arial" font-size="32" font-weight="bold" text-anchor="middle" fill="#1a1a1a">
+    🥤
+  </text>
+  <text x="200" y="350" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle" fill="#1a1a1a">
+    Boisson
+  </text>
+</svg>

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X, ShoppingCart, Phone } from 'lucide-react';
-import { useCart } from '@/hooks/useCart';
+import { useCart } from '@/contexts/CartContext';
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,10 +17,10 @@ export default function Navigation() {
           <div className="flex justify-between items-center text-sm">
             <div className="flex items-center space-x-2">
               <Phone className="w-4 h-4" />
-              <span className="font-medium">+33 1 23 45 67 89</span>
+              <span className="font-medium">04 42 92 03 08</span>
             </div>
             <div className="hidden sm:block">
-              <span className="font-semibold">Ouvert 7j/7 • 11h-22h</span>
+              <span className="font-semibold">Ouvert 6j/7 • 18h-21h30</span>
             </div>
           </div>
         </div>
@@ -54,33 +54,37 @@ export default function Navigation() {
           <div className="hidden lg:flex items-center space-x-1">
             <Link
               href="/"
-              className="px-4 py-2 text-white font-semibold hover:text-primary-yellow transition-all duration-200 hover:scale-105"
+              className="relative px-4 py-2 text-white font-semibold transition-all duration-300 group"
             >
-              Accueil
+              <span className="relative z-10 group-hover:text-charcoal transition-colors">Accueil</span>
+              <span className="absolute inset-0 bg-gradient-to-r from-primary-red to-primary-yellow opacity-0 group-hover:opacity-100 rounded-lg transition-opacity duration-300 shadow-lg"></span>
             </Link>
             <Link
               href="/menu"
-              className="px-4 py-2 text-white font-semibold hover:text-primary-yellow transition-all duration-200 hover:scale-105"
+              className="relative px-4 py-2 text-white font-semibold transition-all duration-300 group"
             >
-              Menu
+              <span className="relative z-10 group-hover:text-charcoal transition-colors">Menu</span>
+              <span className="absolute inset-0 bg-gradient-to-r from-primary-yellow to-primary-red opacity-0 group-hover:opacity-100 rounded-lg transition-opacity duration-300 shadow-lg"></span>
             </Link>
             <Link
               href="/about"
-              className="px-4 py-2 text-white font-semibold hover:text-primary-yellow transition-all duration-200 hover:scale-105"
+              className="relative px-4 py-2 text-white font-semibold transition-all duration-300 group"
             >
-              À Propos
+              <span className="relative z-10 group-hover:text-charcoal transition-colors">À Propos</span>
+              <span className="absolute inset-0 bg-gradient-to-r from-primary-red to-primary-yellow opacity-0 group-hover:opacity-100 rounded-lg transition-opacity duration-300 shadow-lg"></span>
             </Link>
             <Link
               href="/contact"
-              className="px-4 py-2 text-white font-semibold hover:text-primary-yellow transition-all duration-200 hover:scale-105"
+              className="relative px-4 py-2 text-white font-semibold transition-all duration-300 group"
             >
-              Contact
+              <span className="relative z-10 group-hover:text-charcoal transition-colors">Contact</span>
+              <span className="absolute inset-0 bg-gradient-to-r from-primary-yellow to-primary-red opacity-0 group-hover:opacity-100 rounded-lg transition-opacity duration-300 shadow-lg"></span>
             </Link>
 
             {/* Cart Button */}
             <Link
               href="/cart"
-              className="ml-4 relative bg-primary-red hover:bg-primary-red-light px-6 py-3 rounded-full font-bold text-white transition-all duration-200 hover:scale-105 hover:shadow-lg flex items-center space-x-2"
+              className="ml-4 relative bg-gradient-to-r from-primary-red to-primary-red-dark hover:from-primary-yellow hover:to-primary-red px-6 py-3 rounded-full font-bold text-white hover:text-charcoal transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-2xl flex items-center space-x-2"
             >
               <ShoppingCart className="w-5 h-5" />
               <span>Panier</span>

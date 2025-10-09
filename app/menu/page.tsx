@@ -2,88 +2,23 @@
 import { useState, useEffect } from 'react';
 import { Search, Filter, Star, Flame, Leaf } from 'lucide-react';
 import { Product, Category } from '@/types';
-import { useCart } from '@/hooks/useCart';
+import { useCart } from '@/contexts/CartContext';
 import ProductCard from '@/components/menu/ProductCard';
 import CartSidebar from '@/components/cart/CartSidebar';
 import CategoryFilter from '@/components/menu/CategoryFilter';
-
-// Données temporaires (remplacées par l'API plus tard)
-const mockProducts: Product[] = [
-  {
-    _id: '1',
-    name: "Margherita",
-    description: "Sauce tomate, mozzarella, basilic frais - la classique italienne",
-    price: 8.90,
-    category: "pizza",
-    image: "/images/pizza-placeholder.jpg",
-    ingredients: ["sauce tomate", "mozzarella", "basilic frais"],
-    available: true,
-    popular: true,
-    spicy: false,
-    vegetarian: true,
-    tags: ["classique", "végétarienne"]
-  },
-  {
-    _id: '2',
-    name: "Pepperoni",
-    description: "Sauce tomate, mozzarella, pepperoni épicé",
-    price: 11.90,
-    category: "pizza",
-    image: "/images/pizza-placeholder.jpg",
-    ingredients: ["sauce tomate", "mozzarella", "pepperoni"],
-    available: true,
-    popular: true,
-    spicy: true,
-    vegetarian: false,
-    tags: ["épicée", "viande"]
-  },
-  {
-    _id: '3',
-    name: "4 Fromages",
-    description: "Sauce tomate, mozzarella, chèvre, bleu, emmental",
-    price: 13.50,
-    category: "pizza",
-    image: "/images/pizza-placeholder.jpg",
-    ingredients: ["sauce tomate", "mozzarella", "chèvre", "bleu", "emmental"],
-    available: true,
-    popular: true,
-    spicy: false,
-    vegetarian: true,
-    tags: ["fromage", "végétarienne"]
-  },
-  {
-    _id: '4',
-    name: "Coca-Cola 33cl",
-    description: "Canette de Coca-Cola rafraîchissante",
-    price: 3.50,
-    category: "boisson",
-    image: "/images/pizza-placeholder.jpg",
-    ingredients: [],
-    available: true
-  },
-  {
-    _id: '5',
-    name: "Tiramisu",
-    description: "Dessert italien au café et mascarpone",
-    price: 6.50,
-    category: "dessert",
-    image: "/images/pizza-placeholder.jpg",
-    ingredients: ["mascarpone", "café", "cacao", "biscuits"],
-    available: true
-  }
-];
+import SpecialOfferBanner from '@/components/promotions/SpecialOfferBanner';
+import toast from 'react-hot-toast';
 
 const categories: Category[] = [
   { id: 'all', name: 'Tout le Menu', icon: '🍕' },
   { id: 'pizza', name: 'Pizzas', icon: '🍕' },
   { id: 'boisson', name: 'Boissons', icon: '🥤' },
   { id: 'dessert', name: 'Desserts', icon: '🍰' },
-  { id: 'accompagnement', name: 'Accompagnements', icon: '🍟' },
 ];
 
 export default function Menu() {
-  const [products, setProducts] = useState<Product[]>(mockProducts);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>(mockProducts);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -131,26 +66,74 @@ export default function Menu() {
 
   const handleAddToCart = (product: Product) => {
     addItem(product);
+    toast.success(
+      `${product.name} ajouté au panier !`,
+      {
+        duration: 2000,
+        icon: '🍕',
+        style: {
+          background: '#FFF9F0',
+          color: '#1a1a1a',
+          fontWeight: '600',
+          borderRadius: '16px',
+          border: '1px solid #E30613',
+        },
+      }
+    );
+    setIsCartOpen(true);
   };
 
   return (
     <div className="min-h-screen bg-warm-cream">
-      {/* Hero Header - Clean */}
-      <div className="bg-white py-16 mb-12 border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="inline-block mb-4">
-            <span className="bg-primary-red text-white px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wider">
+      {/* Hero Header - Enhanced with Gradient */}
+      <section className="relative bg-gradient-to-br from-charcoal via-gray-700 to-gray-900 py-20 md:py-28 mb-12 overflow-hidden">
+        {/* Animated Background Patterns */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-10 right-10 w-96 h-96 bg-primary-red/20 rounded-full blur-3xl animate-pulse" style={{animationDuration: '4s'}}></div>
+          <div className="absolute bottom-10 left-10 w-80 h-80 bg-primary-yellow/10 rounded-full blur-3xl animate-pulse" style={{animationDuration: '5s', animationDelay: '1s'}}></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-white/5 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 text-center relative z-10">
+          <div className="inline-block mb-4 backdrop-blur-sm bg-primary-red/90 border border-primary-red rounded-full px-6 py-2 shadow-xl">
+            <span className="text-white text-sm font-bold uppercase tracking-wider">
               Menu Complet
             </span>
           </div>
-          <h1 className="text-5xl md:text-6xl font-black text-charcoal mb-6">
-            Notre <span className="text-primary-red">Carte</span>
+          <h1 className="text-5xl md:text-6xl font-black text-white mb-6 drop-shadow-2xl">
+            Notre <span className="text-primary-yellow drop-shadow-lg">Carte</span>
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-white/90 max-w-3xl mx-auto font-medium drop-shadow-lg">
             Découvrez nos pizzas artisanales préparées avec passion et des ingrédients de qualité
           </p>
+
+          {/* Feature Badges */}
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <div className="backdrop-blur-md bg-white/10 hover:bg-primary-yellow/20 border border-white/30 px-4 py-2 rounded-xl shadow-xl flex items-center gap-2 transition-all duration-300 hover:scale-105">
+              <Star className="w-4 h-4 text-primary-yellow fill-primary-yellow" />
+              <span className="text-sm font-bold text-white">Populaires</span>
+            </div>
+            <div className="backdrop-blur-md bg-white/10 hover:bg-primary-red/20 border border-white/30 px-4 py-2 rounded-xl shadow-xl flex items-center gap-2 transition-all duration-300 hover:scale-105">
+              <Flame className="w-4 h-4 text-primary-red" />
+              <span className="text-sm font-bold text-white">Épicés</span>
+            </div>
+            <div className="backdrop-blur-md bg-white/10 hover:bg-basil-light/20 border border-white/30 px-4 py-2 rounded-xl shadow-xl flex items-center gap-2 transition-all duration-300 hover:scale-105">
+              <Leaf className="w-4 h-4 text-basil-light" />
+              <span className="text-sm font-bold text-white">Végétariens</span>
+            </div>
+          </div>
         </div>
-      </div>
+
+        {/* Bottom Wave Effect */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
+            <path d="M0 0L60 8C120 16 240 32 360 37.3C480 43 600 37 720 34.7C840 32 960 32 1080 37.3C1200 43 1320 53 1380 58.7L1440 64V80H1380C1320 80 1200 80 1080 80C960 80 840 80 720 80C600 80 480 80 360 80C240 80 120 80 60 80H0V0Z" fill="#FFF9F0"/>
+          </svg>
+        </div>
+      </section>
+
+      {/* Special Offer Banner */}
+      <SpecialOfferBanner />
 
       <div className="max-w-7xl mx-auto px-4 pb-20">
         {/* Filtres et Recherche - Clean Design */}
@@ -159,6 +142,7 @@ export default function Menu() {
           <div className="relative max-w-2xl mx-auto">
             <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
+              suppressHydrationWarning
               type="text"
               placeholder="Rechercher une pizza, un ingrédient..."
               value={searchTerm}

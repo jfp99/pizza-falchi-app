@@ -1,10 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { 
-  BarChart, Users, Pizza, DollarSign, Package, 
-  ShoppingCart, TrendingUp, Calendar 
+import {
+  BarChart, Users, Pizza, DollarSign, Package,
+  ShoppingCart, TrendingUp, Calendar
 } from 'lucide-react';
 
 interface Stats {
@@ -38,20 +37,11 @@ export default function AdminDashboard() {
   });
   const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
   const [loading, setLoading] = useState(true);
-  
-  const { data: session, status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
-    if (status === 'loading') return;
-    
-    if (!session || session.user.role !== 'admin') {
-      router.push('/auth/signin');
-      return;
-    }
-    
     fetchDashboardData();
-  }, [session, status, router]);
+  }, []);
 
   const fetchDashboardData = async () => {
     try {

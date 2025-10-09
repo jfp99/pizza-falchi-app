@@ -17,6 +17,7 @@ export default function CategoryFilter({
         <button
           key={category.id}
           onClick={() => onCategoryChange(category.id)}
+          suppressHydrationWarning
           className={`group flex items-center space-x-3 px-6 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 font-bold ${
             selectedCategory === category.id
               ? 'bg-gradient-to-r from-primary-red to-soft-red text-white shadow-2xl scale-105'

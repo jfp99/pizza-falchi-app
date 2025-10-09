@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Pizza, Truck, Clock, Star, ChefHat, Award, Heart, MapPin } from 'lucide-react';
+import SpecialOfferBanner from '@/components/promotions/SpecialOfferBanner';
 
 export default function Home() {
   return (
@@ -43,14 +44,14 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 mb-12">
               <Link
                 href="/menu"
-                className="bg-primary-red hover:bg-primary-red-dark text-white px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-300 transform hover:scale-105 shadow-2xl text-center"
+                className="bg-gradient-to-r from-primary-red to-primary-red-dark hover:from-primary-yellow hover:to-primary-red text-white hover:text-charcoal px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-primary-yellow/50 text-center"
               >
                 Voir le Menu
               </Link>
 
               <Link
                 href="/contact"
-                className="border-2 border-white bg-white/10 backdrop-blur text-white px-12 py-6 rounded-2xl font-bold text-xl hover:bg-white hover:text-charcoal transition-all duration-300 text-center"
+                className="border-2 border-white bg-white/10 backdrop-blur text-white px-12 py-6 rounded-2xl font-bold text-xl hover:bg-white hover:text-charcoal transition-all duration-300 shadow-xl hover:shadow-2xl text-center"
               >
                 Nous Trouver
               </Link>
@@ -82,59 +83,65 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features - Clean Cards */}
+      {/* Special Offer Banner */}
+      <SpecialOfferBanner />
+
+      {/* Features - Enhanced Cards */}
       <section className="py-32 bg-warm-cream">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-6xl font-black text-charcoal mb-6">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <span className="text-primary-red font-bold uppercase tracking-wider text-sm">
+              Nos Atouts
+            </span>
+            <h2 className="text-5xl md:text-6xl font-black text-charcoal mb-4 mt-2">
               Pourquoi Pizza Falchi ?
             </h2>
-            <p className="text-2xl text-gray-600">
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               Tradition • Qualité • Proximité
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Feature Card 1 */}
-            <div className="bg-white p-10 rounded-3xl shadow-lg hover:shadow-xl transition-shadow">
-              <div className="bg-primary-red p-4 rounded-2xl w-16 h-16 flex items-center justify-center mb-6">
-                <Truck className="w-8 h-8 text-white" />
+            <div className="bg-white p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group border border-gray-100">
+              <div className="bg-white p-5 rounded-2xl w-16 h-16 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-md">
+                <Truck className="w-8 h-8 text-gray-600 group-hover:text-primary-red transition-colors duration-300" />
               </div>
-              <h3 className="text-2xl font-bold mb-3 text-charcoal">Food Truck</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Retrouvez-nous dans les meilleurs spots
+              <h3 className="text-xl font-bold mb-3 text-charcoal group-hover:text-primary-red transition-colors">Food Truck</h3>
+              <p className="text-gray-600 leading-relaxed text-sm">
+                Retrouvez-nous dans les meilleurs spots de votre région
               </p>
             </div>
 
             {/* Feature Card 2 */}
-            <div className="bg-white p-10 rounded-3xl shadow-lg hover:shadow-xl transition-shadow">
-              <div className="bg-primary-yellow p-4 rounded-2xl w-16 h-16 flex items-center justify-center mb-6">
-                <Clock className="w-8 h-8 text-charcoal" />
+            <div className="bg-white p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group border border-gray-100">
+              <div className="bg-white p-5 rounded-2xl w-16 h-16 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-md">
+                <Clock className="w-8 h-8 text-gray-600 group-hover:text-primary-yellow transition-colors duration-300" />
               </div>
-              <h3 className="text-2xl font-bold mb-3 text-charcoal">15 Minutes</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Préparation rapide et service express
+              <h3 className="text-xl font-bold mb-3 text-charcoal group-hover:text-primary-yellow transition-colors">15 Minutes</h3>
+              <p className="text-gray-600 leading-relaxed text-sm">
+                Préparation rapide et service express pour vous
               </p>
             </div>
 
             {/* Feature Card 3 */}
-            <div className="bg-white p-10 rounded-3xl shadow-lg hover:shadow-xl transition-shadow">
-              <div className="bg-basil-light p-4 rounded-2xl w-16 h-16 flex items-center justify-center mb-6">
-                <Star className="w-8 h-8 text-white" />
+            <div className="bg-white p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group border border-gray-100">
+              <div className="bg-white p-5 rounded-2xl w-16 h-16 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-md">
+                <Star className="w-8 h-8 text-gray-600 group-hover:text-basil-light transition-colors duration-300" />
               </div>
-              <h3 className="text-2xl font-bold mb-3 text-charcoal">Frais & Bio</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Ingrédients de saison et locaux
+              <h3 className="text-xl font-bold mb-3 text-charcoal group-hover:text-basil-light transition-colors">Frais & Bio</h3>
+              <p className="text-gray-600 leading-relaxed text-sm">
+                Ingrédients de saison, frais et locaux
               </p>
             </div>
 
             {/* Feature Card 4 */}
-            <div className="bg-white p-10 rounded-3xl shadow-lg hover:shadow-xl transition-shadow">
-              <div className="bg-primary-red p-4 rounded-2xl w-16 h-16 flex items-center justify-center mb-6">
-                <ChefHat className="w-8 h-8 text-white" />
+            <div className="bg-white p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group border border-gray-100">
+              <div className="bg-white p-5 rounded-2xl w-16 h-16 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-md">
+                <ChefHat className="w-8 h-8 text-gray-600 group-hover:text-primary-red transition-colors duration-300" />
               </div>
-              <h3 className="text-2xl font-bold mb-3 text-charcoal">Savoir-Faire</h3>
-              <p className="text-gray-600 leading-relaxed">
+              <h3 className="text-xl font-bold mb-3 text-charcoal group-hover:text-primary-red transition-colors">Savoir-Faire</h3>
+              <p className="text-gray-600 leading-relaxed text-sm">
                 3 générations de passion italienne
               </p>
             </div>
@@ -199,7 +206,7 @@ export default function Home() {
 
               <Link
                 href="/menu"
-                className="inline-flex items-center gap-3 bg-primary-red hover:bg-primary-red-dark text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300"
+                className="inline-flex items-center gap-3 bg-gradient-to-r from-primary-red to-primary-red-dark hover:from-primary-yellow hover:to-primary-red text-white hover:text-charcoal px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105"
               >
                 Découvrir le Menu
                 <span>→</span>
@@ -209,23 +216,68 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Section - Clean */}
-      <section className="py-32 bg-primary-red">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-5xl md:text-6xl font-black text-white mb-8">
-            Prêt à commander ?
-          </h2>
-          <p className="text-2xl text-white/90 mb-12">
-            Découvrez notre menu et savourez l'Italie
-          </p>
-          <Link
-            href="/menu"
-            className="inline-flex items-center gap-3 bg-white text-primary-red px-12 py-6 rounded-2xl font-bold text-xl hover:bg-primary-yellow transition-all duration-300"
-          >
-            Voir le Menu
-            <Pizza className="w-6 h-6" />
-          </Link>
+      {/* CTA Section - Hero Style */}
+      <section className="relative bg-gradient-to-br from-charcoal via-gray-700 to-gray-900 py-32 md:py-40 overflow-hidden">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-20 left-20 w-96 h-96 bg-primary-red/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-20 w-80 h-80 bg-primary-yellow/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/5 rounded-full blur-3xl"></div>
         </div>
+
+        <div className="max-w-5xl mx-auto px-4 text-center relative z-10">
+          {/* Badge */}
+          <div className="inline-block mb-6">
+            <span className="bg-primary-red text-white px-6 py-3 rounded-full text-sm font-bold uppercase tracking-wider shadow-xl">
+              Commandez maintenant
+            </span>
+          </div>
+
+          <h2 className="text-5xl md:text-7xl font-black text-white mb-6 drop-shadow-2xl">
+            Prêt à <span className="text-primary-yellow drop-shadow-lg">commander</span> ?
+          </h2>
+          <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-2xl mx-auto leading-relaxed drop-shadow-lg">
+            Découvrez notre menu et savourez l'authenticité italienne. Des pizzas artisanales préparées avec passion.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <Link
+              href="/menu"
+              className="inline-flex items-center justify-center gap-3 bg-gradient-to-r from-primary-red to-primary-yellow hover:from-primary-yellow hover:to-primary-red text-white px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-300 shadow-2xl hover:shadow-primary-yellow/50 hover:scale-105"
+            >
+              Voir le Menu
+              <Pizza className="w-6 h-6" />
+            </Link>
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center gap-3 border-2 border-white bg-white/10 backdrop-blur text-white px-12 py-6 rounded-2xl font-bold text-xl hover:bg-white hover:text-charcoal transition-all duration-300 shadow-xl hover:shadow-2xl"
+            >
+              Nous Contacter
+              <span>→</span>
+            </Link>
+          </div>
+
+          {/* Quick Stats */}
+          <div className="flex flex-wrap justify-center gap-8 md:gap-12">
+            <div className="backdrop-blur-sm bg-white/10 rounded-2xl px-6 py-4 border border-white/20 shadow-lg">
+              <div className="text-3xl font-black text-primary-yellow mb-1">100+</div>
+              <div className="text-white/80 text-sm">Recettes Artisanales</div>
+            </div>
+            <div className="backdrop-blur-sm bg-white/10 rounded-2xl px-6 py-4 border border-white/20 shadow-lg">
+              <div className="text-3xl font-black text-primary-yellow mb-1">⭐ 4.9</div>
+              <div className="text-white/80 text-sm">Note Moyenne</div>
+            </div>
+            <div className="backdrop-blur-sm bg-white/10 rounded-2xl px-6 py-4 border border-white/20 shadow-lg">
+              <div className="text-3xl font-black text-primary-yellow mb-1">15min</div>
+              <div className="text-white/80 text-sm">Préparation Rapide</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Decorative pattern */}
+        <div className="absolute inset-0 opacity-5" style={{
+          backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,.05) 20px, rgba(255,255,255,.05) 40px)'
+        }}></div>
       </section>
     </div>
   );

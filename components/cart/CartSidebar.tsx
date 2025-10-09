@@ -1,7 +1,8 @@
 'use client';
-import { X, Plus, Minus } from 'lucide-react';
-import { useCart } from '@/hooks/useCart';
+import { X, Plus, Minus, ShoppingCart } from 'lucide-react';
+import { useCart } from '@/contexts/CartContext';
 import CartItem from './CartItem';
+import Link from 'next/link';
 
 interface CartSidebarProps {
   isOpen: boolean;
@@ -11,8 +12,7 @@ interface CartSidebarProps {
 export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
   const { items, getTotalPrice, clearCart } = useCart();
 
-  const deliveryFee = 2.50;
-  const total = getTotalPrice() + deliveryFee;
+  const subtotal = getTotalPrice();
 
   return (
     <>
@@ -60,28 +60,28 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
               {/* Résumé et actions */}
               <div className="border-t pt-6 space-y-4">
                 <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Sous-total:</span>
-                    <span className="font-semibold">{getTotalPrice().toFixed(2)}€</span>
+                  <div className="flex justify-between items-center text-lg">
+                    <span className="font-bold text-charcoal">Sous-total</span>
+                    <span className="font-bold text-primary-red text-xl">{subtotal.toFixed(2)}€</span>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Livraison:</span>
-                    <span className="font-semibold">{deliveryFee}€</span>
-                  </div>
-                  <div className="flex justify-between items-center text-lg border-t pt-2">
-                    <span className="font-bold">Total:</span>
-                    <span className="font-bold text-primary-red">{total.toFixed(2)}€</span>
-                  </div>
+                  <p className="text-sm text-gray-500">
+                    Les frais de livraison seront calculés à l'étape suivante
+                  </p>
                 </div>
-                
+
                 <div className="space-y-3">
-                  <button className="w-full bg-primary-red text-white py-3 rounded-lg hover:bg-red-700 transition font-bold">
-                    Commander • {total.toFixed(2)}€
-                  </button>
-                  
-                  <button 
+                  <Link
+                    href="/checkout"
+                    onClick={onClose}
+                    className="w-full bg-primary-red hover:bg-primary-red-dark text-white py-4 rounded-2xl transition font-bold flex items-center justify-center gap-2"
+                  >
+                    <ShoppingCart className="w-5 h-5" />
+                    Passer commande
+                  </Link>
+
+                  <button
                     onClick={clearCart}
-                    className="w-full border border-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-50 transition"
+                    className="w-full border-2 border-gray-200 text-charcoal py-3 rounded-2xl hover:bg-gray-50 transition font-semibold"
                   >
                     Vider le panier
                   </button>

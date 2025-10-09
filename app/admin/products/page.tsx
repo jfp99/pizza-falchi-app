@@ -2,7 +2,11 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { Plus, Edit, Trash2, Search, Filter, Pizza, CupSoda, Dessert, Salad } from 'lucide-react';
+import {
+  Plus, Edit, Trash2, Search, Filter, Pizza, CupSoda,
+  AlertTriangle, Package, TrendingDown, CheckCircle,
+  Coffee, Cake, Utensils
+} from 'lucide-react';
 import toast from 'react-hot-toast';
 
 interface Product {
@@ -18,6 +22,8 @@ interface Product {
   spicy?: boolean;
   vegetarian?: boolean;
   tags?: string[];
+  stock?: number;
+  minStock?: number;
 }
 
 export default function AdminProducts() {
@@ -119,12 +125,41 @@ export default function AdminProducts() {
     }
   };
 
+  const handleUpdateStock = async (productId: string, newStock: number) => {
+    try {
+      const product = products.find(p => p._id === productId);
+      if (!product) return;
+
+      const res = await fetch(`/api/products/${productId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...product, stock: newStock })
+      });
+
+      if (res.ok) {
+        toast.success('Stock mis à jour');
+        fetchProducts();
+      }
+    } catch (error) {
+      toast.error('Erreur lors de la mise à jour du stock');
+    }
+  };
+
+  const getStockStatus = (product: Product) => {
+    const stock = product.stock || 0;
+    const minStock = product.minStock || 10;
+
+    if (stock === 0) return { label: 'Rupture', color: 'text-red-600', bgColor: 'bg-red-50' };
+    if (stock <= minStock) return { label: 'Faible', color: 'text-yellow-600', bgColor: 'bg-yellow-50' };
+    return { label: 'Bon', color: 'text-green-600', bgColor: 'bg-green-50' };
+  };
+
   const getCategoryIcon = (category: string) => {
     switch (category) {
       case 'pizza': return <Pizza className="w-5 h-5" />;
-      case 'boisson': return <CupSoda className="w-5 h-5" />;
-      case 'dessert': return <Dessert className="w-5 h-5" />;
-      case 'accompagnement': return <Salad className="w-5 h-5" />;
+      case 'boisson': return <Coffee className="w-5 h-5" />;
+      case 'dessert': return <Cake className="w-5 h-5" />;
+      case 'accompagnement': return <Utensils className="w-5 h-5" />;
       default: return <Pizza className="w-5 h-5" />;
     }
   };
@@ -145,6 +180,13 @@ export default function AdminProducts() {
     );
   }
 
+  const stats = {
+    total: products.length,
+    available: products.filter(p => p.available).length,
+    lowStock: products.filter(p => (p.stock || 0) <= (p.minStock || 10) && (p.stock || 0) > 0).length,
+    outOfStock: products.filter(p => (p.stock || 0) === 0).length
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="max-w-7xl mx-auto px-4 py-8">
@@ -152,6 +194,41 @@ export default function AdminProducts() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Gestion des Produits</h1>
           <p className="text-gray-600">Gérez le menu de votre restaurant</p>
+        </div>
+
+        {/* Statistiques */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white rounded-2xl p-6 shadow-lg">
+            <div className="flex items-center justify-between mb-4">
+              <Package className="w-10 h-10 text-primary-red" />
+              <span className="text-3xl font-bold text-gray-900">{stats.total}</span>
+            </div>
+            <p className="text-gray-600 font-medium">Total Produits</p>
+          </div>
+
+          <div className="bg-white rounded-2xl p-6 shadow-lg">
+            <div className="flex items-center justify-between mb-4">
+              <CheckCircle className="w-10 h-10 text-green-600" />
+              <span className="text-3xl font-bold text-gray-900">{stats.available}</span>
+            </div>
+            <p className="text-gray-600 font-medium">Disponibles</p>
+          </div>
+
+          <div className="bg-white rounded-2xl p-6 shadow-lg">
+            <div className="flex items-center justify-between mb-4">
+              <AlertTriangle className="w-10 h-10 text-yellow-600" />
+              <span className="text-3xl font-bold text-gray-900">{stats.lowStock}</span>
+            </div>
+            <p className="text-gray-600 font-medium">Stock Faible</p>
+          </div>
+
+          <div className="bg-white rounded-2xl p-6 shadow-lg">
+            <div className="flex items-center justify-between mb-4">
+              <TrendingDown className="w-10 h-10 text-red-600" />
+              <span className="text-3xl font-bold text-gray-900">{stats.outOfStock}</span>
+            </div>
+            <p className="text-gray-600 font-medium">Rupture Stock</p>
+          </div>
         </div>
 
         {/* Barre d'actions */}
@@ -226,7 +303,7 @@ export default function AdminProducts() {
                           </span>
                         ))}
                       </div>
-                      <div className="flex items-center space-x-4">
+                      <div className="flex items-center space-x-4 mb-3">
                         <span className="text-2xl font-bold text-[#E30613]">{product.price}€</span>
                         {product.popular && (
                           <span className="bg-[#FFD200] text-black px-2 py-1 rounded text-xs font-bold">
@@ -243,6 +320,43 @@ export default function AdminProducts() {
                             Végétarien
                           </span>
                         )}
+                      </div>
+
+                      {/* Stock Information */}
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
+                          <label className="text-sm font-medium text-gray-700">Stock:</label>
+                          <input
+                            type="number"
+                            min="0"
+                            value={product.stock || 0}
+                            onChange={(e) => handleUpdateStock(product._id, parseInt(e.target.value) || 0)}
+                            className={`w-20 px-2 py-1 border rounded-lg text-sm font-semibold focus:ring-2 focus:ring-[#E30613] ${
+                              (product.stock || 0) === 0
+                                ? 'border-red-300 bg-red-50 text-red-700'
+                                : (product.stock || 0) <= (product.minStock || 10)
+                                ? 'border-yellow-300 bg-yellow-50 text-yellow-700'
+                                : 'border-gray-300 bg-white text-gray-900'
+                            }`}
+                          />
+                          <span className="text-sm text-gray-500">/ {product.minStock || 10}</span>
+                        </div>
+
+                        {(() => {
+                          const status = getStockStatus(product);
+                          return (
+                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-sm font-medium ${status.bgColor} ${status.color}`}>
+                              {(product.stock || 0) === 0 ? (
+                                <TrendingDown className="w-4 h-4" />
+                              ) : (product.stock || 0) <= (product.minStock || 10) ? (
+                                <AlertTriangle className="w-4 h-4" />
+                              ) : (
+                                <CheckCircle className="w-4 h-4" />
+                              )}
+                              {status.label}
+                            </span>
+                          );
+                        })()}
                       </div>
                     </div>
                   </div>
@@ -332,6 +446,8 @@ function ProductModal({ product, onClose, onSave }: {
     spicy: product?.spicy ?? false,
     vegetarian: product?.vegetarian ?? false,
     tags: product?.tags?.join(', ') || '',
+    stock: product?.stock || 100,
+    minStock: product?.minStock || 10,
   });
 
   const [loading, setLoading] = useState(false);
@@ -345,7 +461,9 @@ function ProductModal({ product, onClose, onSave }: {
         ...formData,
         ingredients: formData.ingredients.split(',').map(ing => ing.trim()).filter(ing => ing),
         tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
-        price: parseFloat(formData.price.toString())
+        price: parseFloat(formData.price.toString()),
+        stock: parseInt(formData.stock.toString()) || 100,
+        minStock: parseInt(formData.minStock.toString()) || 10
       };
 
       const url = product ? `/api/products/${product._id}` : '/api/products';
@@ -478,6 +596,36 @@ function ProductModal({ product, onClose, onSave }: {
                 placeholder="classique, végétarienne, épicée..."
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E30613] focus:border-transparent"
               />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Stock actuel
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  value={formData.stock}
+                  onChange={(e) => setFormData({ ...formData, stock: parseInt(e.target.value) || 0 })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E30613] focus:border-transparent"
+                  placeholder="100"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Stock minimum (seuil d'alerte)
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  value={formData.minStock}
+                  onChange={(e) => setFormData({ ...formData, minStock: parseInt(e.target.value) || 0 })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E30613] focus:border-transparent"
+                  placeholder="10"
+                />
+              </div>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
