@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand Colors - Bold */
+  --color-primary-red: #E30613;
+  --color-primary-red-dark: #B3050F;
+  --color-primary-red-light: #FF1A28;
+  --color-primary-yellow: #FFD200;
+  --color-primary-yellow-dark: #E6BC00;
+  --color-primary-yellow-light: #FFE34D;
+
+  /* Soft/Faded Brand Colors - For Modern UI */
+  --color-soft-red: #F2828B;
+  --color-soft-red-light: #FFB3BA;
+  --color-soft-red-lighter: #FFE5E7;
+  --color-soft-yellow: #FFE999;
+  --color-soft-yellow-light: #FFF4CC;
+  --color-soft-yellow-lighter: #FFFAEB;
+
+  /* Italian Food Colors */
+  --color-basil-green: #2D5016;
+  --color-basil-light: #6B8E23;
+  --color-soft-green: #A8C686;
+  --color-cream: #FFF5E6;
+  --color-warm-cream: #FFF9F0;
+  --color-wood: #8B4513;
+
+  /* Grayscale */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+  --color-charcoal: #2C2C2C;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary-red text-white px-6 py-3 rounded-full font-bold hover:bg-red-700 transition duration-200;
+  }
+  
+  .btn-secondary {
+    @apply bg-primary-yellow text-black px-6 py-3 rounded-full font-bold hover:bg-yellow-500 transition duration-200;
+  }
+
+  .card {
+    @apply bg-white rounded-lg shadow-md hover:shadow-lg transition;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Animation delays */
+  .delay-500 {
+    animation-delay: 500ms;
+  }
+
+  .delay-1000 {
+    animation-delay: 1000ms;
+  }
+
+  .delay-1500 {
+    animation-delay: 1500ms;
+  }
+
+  /* Pulse animation variant */
+  @keyframes pulse-slow {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
