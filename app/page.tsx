@@ -105,11 +105,11 @@ export default function Home() {
             {/* Feature Card 1 */}
             <div className="bg-white p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group border border-gray-100">
               <div className="bg-white p-5 rounded-2xl w-16 h-16 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-md">
-                <Truck className="w-8 h-8 text-gray-600 group-hover:text-primary-red transition-colors duration-300" />
+                <Award className="w-8 h-8 text-gray-600 group-hover:text-primary-red transition-colors duration-300" />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-charcoal group-hover:text-primary-red transition-colors">Food Truck</h3>
+              <h3 className="text-xl font-bold mb-3 text-charcoal group-hover:text-primary-red transition-colors">Service Premium</h3>
               <p className="text-gray-600 leading-relaxed text-sm">
-                Retrouvez-nous dans les meilleurs spots de votre région
+                Un service client attentionné et une qualité irréprochable
               </p>
             </div>
 
