@@ -10,9 +10,8 @@ export default function CartPage() {
   const { items, updateQuantity, removeItem, clearCart, getTotalPrice } = useCart();
 
   const subtotal = getTotalPrice();
-  const tax = subtotal * 0.055; // 5.5% TVA
   const deliveryFee = subtotal > 30 ? 0 : 5; // Free delivery above 30€
-  const total = subtotal + tax + deliveryFee;
+  const total = subtotal + deliveryFee;
 
   const handleRemoveItem = (productId: string, productName: string) => {
     removeItem(productId);
@@ -230,16 +229,9 @@ export default function CartPage() {
                 <div className="flex justify-between text-gray-600">
                   <span className="flex items-center gap-2">
                     <span className="text-lg">🛒</span>
-                    Sous-total ({items.reduce((acc, item) => acc + item.quantity, 0)} articles)
+                    Sous-total TTC ({items.reduce((acc, item) => acc + item.quantity, 0)} articles)
                   </span>
                   <span className="font-semibold text-gray-900">{subtotal.toFixed(2)}€</span>
-                </div>
-                <div className="flex justify-between text-gray-600">
-                  <span className="flex items-center gap-2">
-                    <span className="text-lg">💶</span>
-                    TVA (5.5%)
-                  </span>
-                  <span className="font-semibold text-gray-900">{tax.toFixed(2)}€</span>
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span className="flex items-center gap-2">

@@ -42,8 +42,7 @@ export default function Checkout() {
 
   const subtotal = getTotal();
   const deliveryFee = deliveryType === 'delivery' && subtotal < 30 ? 5 : 0;
-  const tax = subtotal * 0.055;
-  const total = subtotal + deliveryFee + tax;
+  const total = subtotal + deliveryFee;
 
   // Create payment intent when online payment is selected
   useEffect(() => {
@@ -135,7 +134,7 @@ export default function Checkout() {
           total: item.product.price * item.quantity
         })),
         subtotal,
-        tax,
+        tax: 0,
         deliveryFee,
         total,
         paymentMethod: formData.paymentMethod,
@@ -549,12 +548,8 @@ export default function Checkout() {
               {/* Pricing */}
               <div className="border-t border-gray-200 pt-4 space-y-3 mb-6">
                 <div className="flex justify-between text-gray-600">
-                  <span>Sous-total</span>
+                  <span>Sous-total (TTC)</span>
                   <span className="font-semibold">{subtotal.toFixed(2)}€</span>
-                </div>
-                <div className="flex justify-between text-gray-600">
-                  <span>TVA (5.5%)</span>
-                  <span className="font-semibold">{tax.toFixed(2)}€</span>
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Livraison</span>
