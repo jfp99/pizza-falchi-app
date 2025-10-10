@@ -34,9 +34,10 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
           {/* En-tête */}
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-900">Votre Panier</h2>
-            <button 
+            <button
               onClick={onClose}
               className="md:hidden text-gray-500 hover:text-gray-700"
+              aria-label="Fermer le panier"
             >
               <X className="w-6 h-6" />
             </button>

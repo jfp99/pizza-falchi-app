@@ -12,7 +12,7 @@ export default function Home() {
         <div className="absolute inset-0">
           <Image
             src="/images/hero-img.avif"
-            alt="Pizza Falchi"
+            alt="Pizza Falchi - Pizzas artisanales italiennes authentiques"
             fill
             className="object-cover"
             priority

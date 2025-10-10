@@ -248,6 +248,7 @@ export default function Menu() {
         <button
           onClick={() => setIsCartOpen(true)}
           className="fixed bottom-6 right-6 bg-gradient-to-br from-primary-red to-primary-yellow hover:from-primary-yellow hover:to-primary-red text-white p-5 rounded-full shadow-2xl md:hidden z-40 transition-all duration-300 transform hover:scale-110 active:scale-95"
+          aria-label={`Ouvrir le panier ${getTotalItems() > 0 ? `(${getTotalItems()} article${getTotalItems() > 1 ? 's' : ''})` : '(vide)'}`}
         >
           <div className="relative">
             <span className="text-2xl drop-shadow-lg">🛒</span>

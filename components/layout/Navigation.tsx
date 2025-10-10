@@ -34,8 +34,8 @@ export default function Navigation() {
           <Link href="/" className="flex items-center space-x-3 group">
             <div className="relative w-12 h-12 transition-transform duration-300 group-hover:scale-110">
               <Image
-                src="/images/logo-pizzafalchi.avif"
-                alt="Pizza Falchi"
+                src="/images/logo-pizzafalchi.jpg"
+                alt="Pizza Falchi Logo"
                 fill
                 className="object-contain"
                 priority
@@ -90,6 +90,7 @@ export default function Navigation() {
             >
               <button
                 className="relative bg-gradient-to-r from-primary-red to-primary-red-dark hover:from-primary-yellow hover:to-primary-red px-6 py-3 rounded-full font-bold text-white hover:text-charcoal transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-2xl flex items-center space-x-2"
+                aria-label={`Panier ${getTotalItems() > 0 ? `avec ${getTotalItems()} article${getTotalItems() > 1 ? 's' : ''}` : 'vide'}`}
               >
                 <ShoppingCart className="w-5 h-5" />
                 <span>Panier</span>

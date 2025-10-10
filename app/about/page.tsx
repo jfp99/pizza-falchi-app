@@ -98,7 +98,7 @@ export default function About() {
               <div className="bg-white p-8 rounded-3xl shadow-lg flex flex-col h-full w-full">
                 <div className="relative w-16 h-16 mb-6">
                   <Image
-                    src="/images/logo-pizzafalchi.avif"
+                    src="/images/logo-pizzafalchi.jpg"
                     alt="Pizza Falchi Logo"
                     fill
                     className="object-contain"

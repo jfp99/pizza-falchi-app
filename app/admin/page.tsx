@@ -168,33 +168,37 @@ export default function AdminDashboard() {
             </div>
             <div className="p-6">
               <div className="grid grid-cols-2 gap-4">
-                <button 
+                <button
                   onClick={() => router.push('/admin/products')}
                   className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary-red hover:bg-red-50 transition text-center"
+                  aria-label="Gérer les produits"
                 >
                   <Package className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                   <p className="font-medium">Gérer les Produits</p>
                 </button>
-                
-                <button 
+
+                <button
                   onClick={() => router.push('/admin/orders')}
                   className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary-red hover:bg-red-50 transition text-center"
+                  aria-label="Voir les commandes"
                 >
                   <ShoppingCart className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                   <p className="font-medium">Voir les Commandes</p>
                 </button>
-                
-                <button 
+
+                <button
                   onClick={() => router.push('/admin/customers')}
                   className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary-red hover:bg-red-50 transition text-center"
+                  aria-label="Gérer les clients"
                 >
                   <Users className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                   <p className="font-medium">Gérer les Clients</p>
                 </button>
-                
-                <button 
+
+                <button
                   onClick={() => router.push('/admin/analytics')}
                   className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary-red hover:bg-red-50 transition text-center"
+                  aria-label="Voir les analytiques"
                 >
                   <TrendingUp className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                   <p className="font-medium">Analytiques</p>

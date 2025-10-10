@@ -23,6 +23,7 @@ export default function CartItem({ item }: CartItemProps) {
         <button
           onClick={() => removeItem(item.product._id)}
           className="text-red-500 hover:text-red-700 transition"
+          aria-label={`Retirer ${item.product.name} du panier`}
         >
           <Trash2 className="w-4 h-4" />
         </button>
@@ -33,6 +34,7 @@ export default function CartItem({ item }: CartItemProps) {
           <button
             onClick={() => updateQuantity(item.product._id, item.quantity - 1)}
             className="bg-white border border-gray-300 rounded-lg p-2 hover:bg-gray-50 transition"
+            aria-label="Diminuer la quantité"
           >
             <Minus className="w-4 h-4" />
           </button>
@@ -42,6 +44,7 @@ export default function CartItem({ item }: CartItemProps) {
           <button
             onClick={() => updateQuantity(item.product._id, item.quantity + 1)}
             className="bg-white border border-gray-300 rounded-lg p-2 hover:bg-gray-50 transition"
+            aria-label="Augmenter la quantité"
           >
             <Plus className="w-4 h-4" />
           </button>

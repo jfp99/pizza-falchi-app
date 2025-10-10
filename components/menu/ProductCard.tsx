@@ -51,7 +51,7 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
       <Link href={`/products/${product._id}`} className="relative overflow-hidden aspect-[4/3] cursor-pointer bg-gray-100">
         <img
           src={imageSrc}
-          alt={product.name}
+          alt={`${product.name} - ${product.description}`}
           className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300"
           loading="lazy"
           onError={() => {
@@ -126,6 +126,7 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
             }}
             disabled={!product.available}
             suppressHydrationWarning
+            aria-label={`Ajouter ${product.name} au panier`}
             className="w-full lg:w-auto lg:px-6 bg-gradient-to-r from-charcoal to-gray-800 hover:from-primary-red hover:to-primary-yellow text-white hover:text-charcoal py-3 rounded-xl font-bold flex items-center justify-center lg:justify-start gap-2 transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer text-sm shadow-lg hover:shadow-2xl hover:scale-105"
           >
             <Plus className="w-4 h-4" />

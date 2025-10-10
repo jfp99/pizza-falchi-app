@@ -103,7 +103,7 @@ export default function ProductDetail() {
             <div className="relative aspect-square rounded-2xl overflow-hidden mb-6">
               <img
                 src={product.image || '/images/pizza-placeholder.jpg'}
-                alt={product.name}
+                alt={`${product.name} - ${product.description}`}
                 className="w-full h-full object-cover"
               />
 

@@ -18,6 +18,11 @@ export const metadata: Metadata = {
     template: '%s | Pizza Falchi'
   },
   description: 'Découvrez Pizza Falchi, votre food truck de pizzas artisanales à Ajaccio. Pizzas au feu de bois préparées avec des ingrédients frais et de qualité. Commandez en ligne et savourez l\'authenticité corse.',
+  icons: {
+    icon: '/images/logo-pizzafalchi.jpg',
+    shortcut: '/images/logo-pizzafalchi.jpg',
+    apple: '/images/logo-pizzafalchi.jpg',
+  },
   keywords: [
     'pizza',
     'pizzeria',

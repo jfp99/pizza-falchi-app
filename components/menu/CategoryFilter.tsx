@@ -18,6 +18,8 @@ export default function CategoryFilter({
           key={category.id}
           onClick={() => onCategoryChange(category.id)}
           suppressHydrationWarning
+          aria-label={`Filtrer par ${category.name}`}
+          aria-pressed={selectedCategory === category.id}
           className={`group relative flex items-center space-x-3 px-8 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 font-bold text-base overflow-hidden cursor-pointer ${
             selectedCategory === category.id
               ? 'bg-gradient-to-r from-primary-red to-primary-yellow text-white shadow-xl scale-105'

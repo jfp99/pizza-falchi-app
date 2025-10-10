@@ -100,7 +100,7 @@ export default function CartPage() {
                   <div className="flex-shrink-0 relative">
                     <img
                       src={item.product.image || '/images/pizza-placeholder.jpg'}
-                      alt={item.product.name}
+                      alt={`${item.product.name} - ${item.product.description}`}
                       className="w-28 h-28 object-cover rounded-2xl shadow-sm"
                     />
                     {item.product.popular && (

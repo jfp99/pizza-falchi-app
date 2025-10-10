@@ -282,9 +282,9 @@ export default function AdminProducts() {
               <div className="p-6">
                 <div className="flex items-start justify-between">
                   <div className="flex items-start space-x-4 flex-1">
-                    <img 
-                      src={product.image || '/images/pizza-placeholder.jpg'} 
-                      alt={product.name}
+                    <img
+                      src={product.image || '/images/pizza-placeholder.jpg'}
+                      alt={`${product.name} - ${product.description}`}
                       className="w-20 h-20 object-cover rounded-lg"
                     />
                     <div className="flex-1">

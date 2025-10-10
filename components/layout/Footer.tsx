@@ -18,8 +18,8 @@ export default function Footer() {
             <Link href="/" className="flex items-center space-x-2 mb-3 group">
               <div className="relative w-12 h-12 transition-transform duration-300 group-hover:scale-110">
                 <Image
-                  src="/images/logo-pizzafalchi.avif"
-                  alt="Pizza Falchi"
+                  src="/images/logo-pizzafalchi.jpg"
+                  alt="Pizza Falchi Logo"
                   fill
                   className="object-contain"
                 />
