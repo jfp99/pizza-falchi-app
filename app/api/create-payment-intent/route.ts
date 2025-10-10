@@ -1,12 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2025-09-30.clover',
-});
+// Lazy initialization - only create Stripe instance when needed
+const getStripe = () => {
+  const secretKey = process.env.STRIPE_SECRET_KEY;
+
+  if (!secretKey || secretKey === 'your_stripe_secret_key_here') {
+    return null;
+  }
+
+  return new Stripe(secretKey, {
+    apiVersion: '2025-09-30.clover',
+  });
+};
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if Stripe is configured
+    const stripe = getStripe();
+
+    if (!stripe) {
+      return NextResponse.json(
+        { error: 'Online payments are not configured. Please use cash or card on delivery.' },
+        { status: 503 }
+      );
+    }
+
     const { amount, currency = 'eur' } = await request.json();
 
     // Validate amount
