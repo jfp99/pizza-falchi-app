@@ -209,12 +209,12 @@ export default function About() {
             {/* Team Member 2 */}
             <div className="bg-white rounded-3xl p-6 shadow-lg hover:shadow-xl transition-shadow text-center">
               <div className="w-24 h-24 bg-gray-500 rounded-full mx-auto mb-5 flex items-center justify-center">
-                <span className="text-5xl">👩‍🍳</span>
+                <span className="text-5xl">👨‍🍳</span>
               </div>
-              <h3 className="text-xl font-bold text-charcoal mb-2">Sofia Rossi</h3>
-              <p className="text-gray-600 font-semibold mb-3 text-sm">Chef Pâtissière</p>
+              <h3 className="text-xl font-bold text-charcoal mb-2">Mickael Pruvost</h3>
+              <p className="text-gray-600 font-semibold mb-3 text-sm">Gérant</p>
               <p className="text-gray-600 leading-relaxed text-sm">
-                Experte en desserts italiens, elle crée nos tiramisu et panna cotta maison avec passion.
+                Expert en pizza italienne, il développe et vous fait découvrir ses plus belles créations avec passion.
               </p>
             </div>
 
