@@ -261,13 +261,6 @@ export default function Checkout() {
                   </p>
                 </button>
               </div>
-              {deliveryType === 'delivery' && subtotal < 30 && (
-                <div className="mt-4 p-4 bg-gradient-to-r from-primary-yellow/10 to-primary-yellow/5 rounded-2xl border border-primary-yellow/30">
-                  <p className="text-sm font-semibold text-gray-800 flex items-center gap-2">
-                    💡 Plus que {(30 - subtotal).toFixed(2)}€ pour la livraison gratuite !
-                  </p>
-                </div>
-              )}
             </div>
 
             {/* Customer Information */}
