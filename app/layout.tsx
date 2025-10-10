@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Toaster } from 'react-hot-toast';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
 import AuthProvider from '@/components/providers/SessionProvider';
@@ -112,6 +113,7 @@ export default function RootLayout({
                 },
               }}
             />
+            <SpeedInsights />
           </CartProvider>
         </AuthProvider>
       </body>
