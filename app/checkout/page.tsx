@@ -248,22 +248,16 @@ export default function Checkout() {
 
                 <button
                   type="button"
-                  onClick={() => setDeliveryType('delivery')}
-                  className={`relative p-6 rounded-2xl border-2 transition-all duration-200 ${
-                    deliveryType === 'delivery'
-                      ? 'border-primary-red bg-gradient-to-br from-primary-red/5 to-primary-red/10 shadow-md'
-                      : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
-                  }`}
+                  disabled
+                  className="relative p-6 rounded-2xl border-2 border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed"
                 >
-                  {deliveryType === 'delivery' && (
-                    <div className="absolute top-3 right-3 bg-primary-red text-white rounded-full p-1">
-                      <Check className="w-4 h-4" />
-                    </div>
-                  )}
-                  <Truck className={`w-10 h-10 mb-3 ${deliveryType === 'delivery' ? 'text-primary-red' : 'text-gray-400'}`} />
-                  <h3 className="text-lg font-bold text-gray-900 mb-1">Livraison</h3>
-                  <p className="text-sm text-gray-600 mb-2">À votre adresse</p>
-                  <p className={`font-bold text-lg ${subtotal >= 30 ? 'text-green-600' : 'text-primary-red'}`}>
+                  <div className="absolute top-3 right-3 bg-gray-400 text-white px-2 py-1 rounded-full text-xs font-bold">
+                    Bientôt
+                  </div>
+                  <Truck className="w-10 h-10 mb-3 text-gray-400" />
+                  <h3 className="text-lg font-bold text-gray-500 mb-1">Livraison</h3>
+                  <p className="text-sm text-gray-400 mb-2">Temporairement indisponible</p>
+                  <p className="font-bold text-lg text-gray-400">
                     {subtotal >= 30 ? 'Gratuit !' : '5,00€'}
                   </p>
                 </button>
@@ -480,21 +474,15 @@ export default function Checkout() {
 
                 <button
                   type="button"
-                  onClick={() => handlePaymentMethodChange('online')}
-                  className={`relative p-5 rounded-2xl border-2 transition-all duration-200 ${
-                    formData.paymentMethod === 'online'
-                      ? 'border-primary-red bg-gradient-to-br from-primary-red/5 to-primary-red/10 shadow-md'
-                      : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
-                  }`}
+                  disabled
+                  className="relative p-5 rounded-2xl border-2 border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed"
                 >
-                  {formData.paymentMethod === 'online' && (
-                    <div className="absolute top-2 right-2 bg-primary-red text-white rounded-full p-0.5">
-                      <Check className="w-3 h-3" />
-                    </div>
-                  )}
-                  <div className="text-3xl mb-2">🌐</div>
-                  <p className="font-bold text-gray-900">En ligne</p>
-                  <p className="text-xs text-gray-500 mt-1">Par Stripe</p>
+                  <div className="absolute top-2 right-2 bg-gray-400 text-white px-2 py-0.5 rounded-full text-xs font-bold">
+                    Bientôt
+                  </div>
+                  <div className="text-3xl mb-2 opacity-50">🌐</div>
+                  <p className="font-bold text-gray-500">En ligne</p>
+                  <p className="text-xs text-gray-400 mt-1">Temporairement indisponible</p>
                 </button>
               </div>
 
