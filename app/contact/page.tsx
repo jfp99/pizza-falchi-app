@@ -1,5 +1,25 @@
 import Link from 'next/link';
 import { MapPin, Phone, Mail, Clock, Send, MessageSquare, Calendar, Instagram, Facebook, Twitter } from 'lucide-react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Contact',
+  description: 'Contactez Pizza Falchi à Puyricard, Aix en Provence. Téléphone: 04 42 92 03 08. Ouvert du mardi au dimanche de 18h à 21h30. Adresse: 615 avenue de la Touloubre, 13540 Puyricard.',
+  openGraph: {
+    title: 'Contactez-nous | Pizza Falchi',
+    description: 'Une question ? Une suggestion ? Nous sommes à votre écoute ! Appelez-nous, envoyez-nous un email ou venez nous rendre visite à Puyricard.',
+    url: 'https://www.pizzafalchi.com/contact',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Contactez-nous | Pizza Falchi',
+    description: 'Une question ? Contactez Pizza Falchi à Puyricard. Tél: 04 42 92 03 08',
+  },
+  alternates: {
+    canonical: '/contact',
+  },
+};
 
 export default function Contact() {
   return (
@@ -143,10 +163,10 @@ export default function Contact() {
               </div>
 
               {/* Social Media */}
-              <div className="bg-white rounded-3xl p-8 shadow-xl text-center">
-                <h3 className="text-2xl font-bold mb-4 text-charcoal">Suivez-nous</h3>
+              <div className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 group">
+                <h3 className="text-xl font-bold text-charcoal mb-2">Suivez-nous</h3>
                 <p className="text-gray-600 mb-6">Restez informé de nos déplacements et nouveautés !</p>
-                <div className="flex justify-center gap-4">
+                <div className="flex gap-4">
                   <a
                     href="#"
                     className="bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 hover:scale-110 p-4 rounded-2xl transition-all shadow-lg"
@@ -292,10 +312,10 @@ export default function Contact() {
             {/* FAQ Item 1 */}
             <div className="bg-white rounded-2xl p-6 shadow-lg">
               <h3 className="text-xl font-bold text-charcoal mb-3">
-                Où puis-je vous trouver cette semaine ?
+                Où puis-je vous trouver ?
               </h3>
               <p className="text-gray-700 leading-relaxed">
-                Notre planning hebdomadaire est mis à jour chaque dimanche sur nos réseaux sociaux (Instagram et Facebook). Vous pouvez aussi nous appeler au +33 1 23 45 67 89 pour connaître notre emplacement du jour.
+                Nous sommes installés à Puyricard, 615 avenue de la Touloubre (13540 Aix en Provence). Pour toute question sur nos disponibilités ou horaires, appelez-nous au 04 42 92 03 08. Suivez-nous également sur Instagram et Facebook pour ne rien manquer de nos actualités !
               </p>
             </div>
 
