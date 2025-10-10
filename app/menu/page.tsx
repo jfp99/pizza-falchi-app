@@ -321,7 +321,7 @@ export default function Menu() {
             )}
 
             {/* Packages Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {packages.map((pkg) => (
                 <PackageCard
                   key={pkg._id}
@@ -330,15 +330,6 @@ export default function Menu() {
                 />
               ))}
             </div>
-
-            {/* Helpful tip */}
-            {selectedCategory === 'combo' && (
-              <div className="bg-gradient-to-r from-primary-yellow/10 to-primary-red/10 border-2 border-primary-yellow/30 rounded-2xl p-6 text-center">
-                <p className="text-lg font-bold text-gray-800">
-                  💡 <span className="text-primary-red">Astuce :</span> Sélectionnez un combo puis choisissez vos pizzas et boissons en changeant de catégorie !
-                </p>
-              </div>
-            )}
           </div>
         )}
 
