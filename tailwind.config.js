@@ -10,30 +10,41 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // PRIMARY COLORS - Based on logo's most prominent colors
         primary: {
-          red: '#E30613',
-          'red-dark': '#B3050F',
-          'red-light': '#FF1A28',
-          yellow: '#FFD200',
-          'yellow-dark': '#E6BC00',
-          'yellow-light': '#FFE34D',
-          DEFAULT: '#E30613'
+          red: '#C41E1A',        // Logo's main burgundy red (dominant)
+          'red-dark': '#8B1A1D', // Logo's darker border red
+          'red-light': '#D63933', // Lighter variation for hover states
+          yellow: '#E6D5B3',     // Logo's cream/beige banner (dominant)
+          'yellow-dark': '#D4C4A0', // Darker cream for depth
+          'yellow-light': '#F4E4C1', // Lighter cream for highlights
+          DEFAULT: '#C41E1A'
         },
+        // SECONDARY COLORS - Logo's accent colors
+        accent: {
+          gold: '#D4AF37',       // Logo's metallic gold trim (medium prominence)
+          'gold-dark': '#B8941F',
+          'gold-light': '#E6C44D',
+          green: '#009246',      // Italian flag green (accent)
+          'green-light': '#00A651'
+        },
+        // SOFT VARIATIONS - For backgrounds and subtle elements
         soft: {
-          red: '#F2828B',
-          'red-light': '#FFB3BA',
-          'red-lighter': '#FFE5E7',
-          yellow: '#FFE999',
-          'yellow-light': '#FFF4CC',
-          'yellow-lighter': '#FFFAEB',
-          green: '#A8C686'
+          red: '#E8857A',        // Softer version of burgundy
+          'red-light': '#F5ABA3',
+          'red-lighter': '#FDE9E7',
+          yellow: '#F9F3E6',     // Very soft cream
+          'yellow-light': '#FDF9F0',
+          'yellow-lighter': '#FEFCF8',
+          green: '#A8C686'       // Soft green for vegetarian
         },
+        // SUPPORTING COLORS
         basil: {
           green: '#2D5016',
           light: '#6B8E23'
         },
-        cream: '#FFF5E6',
-        'warm-cream': '#FFF9F0',
+        cream: '#F4E4C1',        // Updated to match logo cream
+        'warm-cream': '#FDF9F0', // Lighter cream for backgrounds
         wood: '#8B4513',
         charcoal: '#2C2C2C'
       },
