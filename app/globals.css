@@ -1,28 +1,35 @@
 @import "tailwindcss";
 
 @theme {
-  /* Brand Colors - Bold */
-  --color-primary-red: #E30613;
-  --color-primary-red-dark: #B3050F;
-  --color-primary-red-light: #FF1A28;
-  --color-primary-yellow: #FFD200;
-  --color-primary-yellow-dark: #E6BC00;
-  --color-primary-yellow-light: #FFE34D;
+  /* Brand Colors - Based on Logo */
+  --color-primary-red: #C41E1A;
+  --color-primary-red-dark: #8B1A1D;
+  --color-primary-red-light: #D63933;
+  --color-primary-yellow: #E6D5B3;
+  --color-primary-yellow-dark: #D4C4A0;
+  --color-primary-yellow-light: #F4E4C1;
+
+  /* Accent Colors from Logo */
+  --color-accent-gold: #D4AF37;
+  --color-accent-gold-dark: #B8941F;
+  --color-accent-gold-light: #E6C44D;
+  --color-accent-green: #009246;
+  --color-accent-green-light: #00A651;
 
   /* Soft/Faded Brand Colors - For Modern UI */
-  --color-soft-red: #F2828B;
-  --color-soft-red-light: #FFB3BA;
-  --color-soft-red-lighter: #FFE5E7;
-  --color-soft-yellow: #FFE999;
-  --color-soft-yellow-light: #FFF4CC;
-  --color-soft-yellow-lighter: #FFFAEB;
+  --color-soft-red: #E8857A;
+  --color-soft-red-light: #F5ABA3;
+  --color-soft-red-lighter: #FDE9E7;
+  --color-soft-yellow: #F9F3E6;
+  --color-soft-yellow-light: #FDF9F0;
+  --color-soft-yellow-lighter: #FEFCF8;
 
   /* Italian Food Colors */
   --color-basil-green: #2D5016;
   --color-basil-light: #6B8E23;
   --color-soft-green: #A8C686;
-  --color-cream: #FFF5E6;
-  --color-warm-cream: #FFF9F0;
+  --color-cream: #F4E4C1;
+  --color-warm-cream: #FDF9F0;
   --color-wood: #8B4513;
 
   /* Grayscale */
@@ -43,13 +50,25 @@ body {
   font-family: 'Inter', sans-serif;
 }
 
+/* Global cursor styles for interactive elements */
+button,
+a,
+[role="button"],
+[type="button"],
+[type="submit"],
+[type="reset"],
+select,
+.cursor-pointer {
+  cursor: pointer;
+}
+
 @layer components {
   .btn-primary {
-    @apply bg-primary-red text-white px-6 py-3 rounded-full font-bold hover:bg-red-700 transition duration-200;
+    @apply bg-primary-red text-white px-6 py-3 rounded-full font-bold hover:bg-red-700 transition duration-200 cursor-pointer;
   }
 
   .btn-secondary {
-    @apply bg-primary-yellow text-black px-6 py-3 rounded-full font-bold hover:bg-yellow-500 transition duration-200;
+    @apply bg-primary-yellow text-black px-6 py-3 rounded-full font-bold hover:bg-yellow-500 transition duration-200 cursor-pointer;
   }
 
   .card {
