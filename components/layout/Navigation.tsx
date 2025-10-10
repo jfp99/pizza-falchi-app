@@ -2,12 +2,13 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, X, ShoppingCart, Phone } from 'lucide-react';
+import { Menu, X, ShoppingCart, Phone, Trash2 } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
-  const { getTotalItems } = useCart();
+  const [showCartPreview, setShowCartPreview] = useState(false);
+  const { getTotalItems, items, removeItem, getTotalPrice } = useCart();
 
   return (
     <nav className="bg-gradient-to-r from-charcoal via-gray-900 to-charcoal shadow-2xl sticky top-0 z-50 border-b-4 border-primary-yellow">
@@ -81,19 +82,84 @@ export default function Navigation() {
               <span className="absolute inset-0 bg-gradient-to-r from-primary-yellow to-primary-red opacity-0 group-hover:opacity-100 rounded-lg transition-opacity duration-300 shadow-lg"></span>
             </Link>
 
-            {/* Cart Button */}
-            <Link
-              href="/cart"
-              className="ml-4 relative bg-gradient-to-r from-primary-red to-primary-red-dark hover:from-primary-yellow hover:to-primary-red px-6 py-3 rounded-full font-bold text-white hover:text-charcoal transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-2xl flex items-center space-x-2"
+            {/* Cart Button with Hover Preview */}
+            <div
+              className="relative ml-4"
+              onMouseEnter={() => setShowCartPreview(true)}
+              onMouseLeave={() => setShowCartPreview(false)}
             >
-              <ShoppingCart className="w-5 h-5" />
-              <span>Panier</span>
-              {getTotalItems() > 0 && (
-                <span className="absolute -top-2 -right-2 bg-primary-yellow text-charcoal rounded-full w-7 h-7 text-sm font-black flex items-center justify-center shadow-lg animate-pulse">
-                  {getTotalItems()}
-                </span>
+              <button
+                className="relative bg-gradient-to-r from-primary-red to-primary-red-dark hover:from-primary-yellow hover:to-primary-red px-6 py-3 rounded-full font-bold text-white hover:text-charcoal transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-2xl flex items-center space-x-2"
+              >
+                <ShoppingCart className="w-5 h-5" />
+                <span>Panier</span>
+                {getTotalItems() > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-primary-yellow text-charcoal rounded-full w-7 h-7 text-sm font-black flex items-center justify-center shadow-lg animate-pulse">
+                    {getTotalItems()}
+                  </span>
+                )}
+              </button>
+
+              {/* Cart Preview Dropdown */}
+              {showCartPreview && (
+                <div className="absolute right-0 top-full mt-2 w-96 bg-white rounded-2xl shadow-2xl border-2 border-gray-200 overflow-hidden">
+                  {getTotalItems() === 0 ? (
+                    <div className="p-8 text-center">
+                      <ShoppingCart className="w-16 h-16 mx-auto text-gray-300 mb-4" />
+                      <h3 className="text-xl font-bold text-charcoal mb-2">Votre panier est vide</h3>
+                      <p className="text-gray-600 mb-4">Ajoutez des pizzas délicieuses !</p>
+                      <Link
+                        href="/menu"
+                        className="inline-block bg-gradient-to-r from-primary-red to-primary-yellow text-white px-6 py-3 rounded-xl font-bold hover:scale-105 transition-transform"
+                      >
+                        Voir le Menu
+                      </Link>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="p-4 bg-gradient-to-r from-primary-red to-primary-yellow">
+                        <h3 className="text-white font-bold text-lg">Mon Panier ({getTotalItems()} articles)</h3>
+                      </div>
+                      <div className="max-h-96 overflow-y-auto p-4 space-y-3">
+                        {items.map((item) => (
+                          <div key={item._id} className="flex items-center gap-3 bg-gray-50 p-3 rounded-xl hover:bg-gray-100 transition-colors">
+                            <div className="flex-1">
+                              <h4 className="font-bold text-charcoal text-sm">{item.name}</h4>
+                              <p className="text-xs text-gray-600">Quantité: {item.quantity}</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-bold text-primary-red">{(item.price * item.quantity).toFixed(2)}€</p>
+                            </div>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                removeItem(item._id);
+                              }}
+                              className="p-2 hover:bg-red-100 rounded-lg transition-colors"
+                              aria-label="Retirer du panier"
+                            >
+                              <Trash2 className="w-4 h-4 text-red-600" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="p-4 bg-gray-50 border-t-2 border-gray-200">
+                        <div className="flex justify-between items-center mb-4">
+                          <span className="font-bold text-charcoal">Total:</span>
+                          <span className="font-black text-2xl text-primary-red">{getTotalPrice().toFixed(2)}€</span>
+                        </div>
+                        <Link
+                          href="/cart"
+                          className="block w-full bg-gradient-to-r from-primary-red to-primary-yellow text-white text-center px-6 py-3 rounded-xl font-bold hover:scale-105 transition-transform shadow-lg"
+                        >
+                          Voir le Panier Complet
+                        </Link>
+                      </div>
+                    </>
+                  )}
+                </div>
               )}
-            </Link>
+            </div>
           </div>
 
           {/* Menu Mobile Button */}

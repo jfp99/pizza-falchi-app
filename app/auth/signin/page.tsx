@@ -107,12 +107,6 @@ export default function SignInPage() {
             {loading ? 'Connexion...' : 'Se connecter'}
           </button>
         </form>
-
-        <div className="mt-8 text-center">
-          <p className="text-sm text-gray-600">
-            Compte test: admin@pizzafalchi.fr / admin123
-          </p>
-        </div>
       </div>
     </div>
   );

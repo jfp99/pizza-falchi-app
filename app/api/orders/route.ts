@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import Order from '@/models/Order';
+import { sendWhatsAppNotification } from '@/lib/whatsapp';
 
 export async function GET(request: NextRequest) {
   try {
@@ -75,7 +76,33 @@ export async function POST(request: NextRequest) {
     // Populate product details
     const populatedOrder = await Order.findById(order._id).populate('items.product');
 
-    return NextResponse.json(populatedOrder, { status: 201 });
+    // Send WhatsApp notification
+    try {
+      const whatsappUrl = await sendWhatsAppNotification({
+        orderId: populatedOrder._id.toString().slice(-6).toUpperCase(),
+        customerName: populatedOrder.customerName,
+        phone: populatedOrder.phone,
+        total: populatedOrder.total,
+        items: populatedOrder.items.map((item: any) => ({
+          name: item.product?.name || 'Produit',
+          quantity: item.quantity,
+          price: item.price
+        })),
+        deliveryType: populatedOrder.deliveryType,
+        deliveryAddress: populatedOrder.deliveryAddress,
+        paymentMethod: populatedOrder.paymentMethod
+      });
+
+      // Return the WhatsApp URL in the response so frontend can optionally use it
+      return NextResponse.json({
+        ...populatedOrder.toObject(),
+        whatsappNotificationUrl: whatsappUrl
+      }, { status: 201 });
+    } catch (whatsappError) {
+      console.error('WhatsApp notification error:', whatsappError);
+      // Don't fail the order creation if WhatsApp fails
+      return NextResponse.json(populatedOrder, { status: 201 });
+    }
   } catch (error) {
     console.error('Error creating order:', error);
     return NextResponse.json(
