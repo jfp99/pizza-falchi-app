@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import Order from '@/models/Order';
+import Customer from '@/models/Customer';
 import { sendWhatsAppNotification } from '@/lib/whatsapp';
 
 export async function GET(request: NextRequest) {
@@ -48,6 +49,40 @@ export async function POST(request: NextRequest) {
           { status: 400 }
         );
       }
+    }
+
+    // Find or create customer
+    let customer = await Customer.findOne({ phone: body.phone });
+
+    if (!customer) {
+      // Create new customer
+      customer = await Customer.create({
+        name: body.customerName,
+        email: body.email,
+        phone: body.phone,
+        address: body.deliveryAddress || {},
+        totalOrders: 1,
+        totalSpent: body.total,
+        lastOrderDate: new Date(),
+      });
+    } else {
+      // Update existing customer stats
+      customer.totalOrders += 1;
+      customer.totalSpent += body.total;
+      customer.lastOrderDate = new Date();
+
+      // Update customer info if provided and different
+      if (body.customerName && body.customerName !== customer.name) {
+        customer.name = body.customerName;
+      }
+      if (body.email && body.email !== customer.email) {
+        customer.email = body.email;
+      }
+      if (body.deliveryAddress && body.deliveryType === 'delivery') {
+        customer.address = body.deliveryAddress;
+      }
+
+      await customer.save();
     }
 
     // Calculate estimated delivery time (30-45 minutes from now)

@@ -1,30 +1,55 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { Search, Filter, Star, Flame, Leaf } from 'lucide-react';
+import { Search, Filter, Star, Flame, Leaf, Gift } from 'lucide-react';
 import { Product, Category } from '@/types';
 import { useCart } from '@/contexts/CartContext';
 import ProductCard from '@/components/menu/ProductCard';
 import CartSidebar from '@/components/cart/CartSidebar';
 import CategoryFilter from '@/components/menu/CategoryFilter';
 import SpecialOfferBanner from '@/components/promotions/SpecialOfferBanner';
+import PackageCard from '@/components/packages/PackageCard';
+import ComboSelectionModal from '@/components/packages/ComboSelectionModal';
 import toast from 'react-hot-toast';
 
 const categories: Category[] = [
   { id: 'all', name: 'Tout le Menu', icon: '🍕' },
   { id: 'pizza', name: 'Pizzas', icon: '🍕' },
   { id: 'boisson', name: 'Boissons', icon: '🥤' },
+  { id: 'combo', name: 'Combos', icon: '🎁' },
 ];
+
+interface PackageType {
+  _id: string;
+  name: string;
+  description: string;
+  originalPrice: number;
+  discountedPrice: number;
+  discount: number;
+  items: Array<{
+    type: string;
+    quantity: number;
+    description: string;
+  }>;
+  icon: string;
+  color: string;
+  popular: boolean;
+  badge?: string;
+}
 
 export default function Menu() {
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [packages, setPackages] = useState<PackageType[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isComboModalOpen, setIsComboModalOpen] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState<PackageType | null>(null);
   const { addItem, getTotalItems } = useCart();
 
   useEffect(() => {
     fetchProducts();
+    fetchPackages();
   }, []);
 
   const fetchProducts = async () => {
@@ -41,12 +66,30 @@ export default function Menu() {
     }
   };
 
+  const fetchPackages = async () => {
+    try {
+      const response = await fetch('/api/packages');
+      if (response.ok) {
+        const data = await response.json();
+        setPackages(data);
+      }
+    } catch (error) {
+      console.error('Error fetching packages:', error);
+    }
+  };
+
   useEffect(() => {
     filterProducts();
   }, [products, selectedCategory, searchTerm]);
 
   const filterProducts = () => {
     let filtered = products;
+
+    // Don't show products when 'combo' is selected
+    if (selectedCategory === 'combo') {
+      setFilteredProducts([]);
+      return;
+    }
 
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(product => product.category === selectedCategory);
@@ -70,6 +113,34 @@ export default function Menu() {
       {
         duration: 2000,
         icon: '🍕',
+        style: {
+          background: '#FFF9F0',
+          color: '#1a1a1a',
+          fontWeight: '600',
+          borderRadius: '16px',
+          border: '1px solid #E30613',
+        },
+      }
+    );
+    setIsCartOpen(true);
+  };
+
+  const handleSelectPackage = (pkg: PackageType) => {
+    setSelectedPackage(pkg);
+    setIsComboModalOpen(true);
+  };
+
+  const handleComboConfirm = (selectedProducts: Product[], totalPrice: number) => {
+    // Add each product to cart with combo pricing logic
+    selectedProducts.forEach(product => {
+      addItem(product);
+    });
+
+    toast.success(
+      `🎉 ${selectedPackage?.name} ajouté au panier pour ${totalPrice.toFixed(2)}€ !`,
+      {
+        duration: 3000,
+        icon: '🎁',
         style: {
           background: '#FFF9F0',
           color: '#1a1a1a',
@@ -154,6 +225,7 @@ export default function Menu() {
             />
             {searchTerm && (
               <button
+                suppressHydrationWarning
                 onClick={() => setSearchTerm('')}
                 className="absolute right-5 top-1/2 transform -translate-y-1/2 bg-gray-100 hover:bg-primary-red text-gray-600 hover:text-white p-2 rounded-xl transition-all duration-300 hover:scale-110"
                 aria-label="Clear search"
@@ -174,46 +246,104 @@ export default function Menu() {
         </div>
 
         {/* Product Count & Filters Summary - Enhanced */}
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-10 bg-white rounded-2xl p-5 shadow-lg border-2 border-gray-100 hover:shadow-xl transition-all duration-300">
-          <div className="flex items-center gap-4">
-            <div className="bg-gradient-to-br from-primary-red to-primary-yellow p-3 rounded-xl shadow-md">
-              <Filter className="w-5 h-5 text-white" />
+        {selectedCategory !== 'combo' && (
+          <div className="flex flex-col sm:flex-row justify-between items-center mb-10 bg-white rounded-2xl p-5 shadow-lg border-2 border-gray-100 hover:shadow-xl transition-all duration-300">
+            <div className="flex items-center gap-4">
+              <div className="bg-gradient-to-br from-primary-red to-primary-yellow p-3 rounded-xl shadow-md">
+                <Filter className="w-5 h-5 text-white" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-2xl font-black text-charcoal">
+                  {filteredProducts.length}
+                </span>
+                <span className="text-sm text-gray-600 font-medium">
+                  produit{filteredProducts.length !== 1 ? 's' : ''} trouvé{filteredProducts.length !== 1 ? 's' : ''}
+                </span>
+              </div>
             </div>
-            <div className="flex flex-col">
-              <span className="text-2xl font-black text-charcoal">
-                {filteredProducts.length}
-              </span>
-              <span className="text-sm text-gray-600 font-medium">
-                produit{filteredProducts.length !== 1 ? 's' : ''} trouvé{filteredProducts.length !== 1 ? 's' : ''}
-              </span>
-            </div>
+            {(searchTerm || selectedCategory !== 'all') && (
+              <button
+                suppressHydrationWarning
+                onClick={() => {
+                  setSearchTerm('');
+                  setSelectedCategory('all');
+                }}
+                className="mt-3 sm:mt-0 bg-gray-100 hover:bg-gradient-to-r hover:from-primary-red hover:to-primary-yellow text-charcoal hover:text-white px-6 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 hover:scale-105 shadow-sm hover:shadow-md"
+              >
+                Réinitialiser les filtres
+              </button>
+            )}
           </div>
-          {(searchTerm || selectedCategory !== 'all') && (
-            <button
-              onClick={() => {
-                setSearchTerm('');
-                setSelectedCategory('all');
-              }}
-              className="mt-3 sm:mt-0 bg-gray-100 hover:bg-gradient-to-r hover:from-primary-red hover:to-primary-yellow text-charcoal hover:text-white px-6 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 hover:scale-105 shadow-sm hover:shadow-md"
-            >
-              Réinitialiser les filtres
-            </button>
-          )}
-        </div>
+        )}
 
         {/* Grille des produits */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {filteredProducts.map(product => (
-            <ProductCard
-              key={product._id}
-              product={product}
-              onAddToCart={handleAddToCart}
-            />
-          ))}
-        </div>
+        {selectedCategory !== 'combo' && (
+          <div id="products-section" className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            {filteredProducts.map(product => (
+              <ProductCard
+                key={product._id}
+                product={product}
+                onAddToCart={handleAddToCart}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Packages Section - Now at bottom or prominent when combo selected */}
+        {packages.length > 0 && (selectedCategory === 'combo' || selectedCategory === 'all') && (
+          <div className={`${selectedCategory === 'combo' ? 'mb-12' : 'mb-16'}`} id="combos-section">
+            {/* Header - More prominent for combo filter, discrete for all */}
+            {selectedCategory === 'combo' ? (
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-4">
+                  <div className="bg-gradient-to-br from-primary-red to-primary-yellow p-3 rounded-2xl shadow-xl">
+                    <Gift className="w-7 h-7 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-3xl md:text-4xl font-black text-gray-900">
+                      Nos <span className="text-primary-red">Combos</span>
+                    </h2>
+                    <p className="text-gray-600 text-lg font-medium">
+                      Des offres exceptionnelles pour régaler tout le monde !
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3 mb-6">
+                <div className="bg-gradient-to-br from-primary-red/80 to-primary-yellow/80 p-2.5 rounded-xl shadow-md">
+                  <Gift className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-xl md:text-2xl font-bold text-gray-800">
+                  Nos <span className="text-primary-red">Combos</span>
+                </h3>
+              </div>
+            )}
+
+            {/* Packages Grid */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+              {packages.map((pkg) => (
+                <PackageCard
+                  key={pkg._id}
+                  package={pkg}
+                  onSelect={handleSelectPackage}
+                />
+              ))}
+            </div>
+
+            {/* Helpful tip */}
+            {selectedCategory === 'combo' && (
+              <div className="bg-gradient-to-r from-primary-yellow/10 to-primary-red/10 border-2 border-primary-yellow/30 rounded-2xl p-6 text-center">
+                <p className="text-lg font-bold text-gray-800">
+                  💡 <span className="text-primary-red">Astuce :</span> Sélectionnez un combo puis choisissez vos pizzas et boissons en changeant de catégorie !
+                </p>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Message si aucun résultat - Enhanced */}
-        {filteredProducts.length === 0 && (
+        {filteredProducts.length === 0 && selectedCategory !== 'combo' && (
           <div className="text-center py-20">
             <div className="bg-white rounded-3xl p-12 max-w-lg mx-auto shadow-2xl border-2 border-gray-100 hover:shadow-3xl transition-all duration-300">
               <div className="inline-block bg-soft-red-lighter rounded-3xl p-6 mb-6">
@@ -226,6 +356,7 @@ export default function Menu() {
                 <span className="text-sm">Essayez de modifier vos critères de recherche</span>
               </p>
               <button
+                suppressHydrationWarning
                 onClick={() => {
                   setSearchTerm('');
                   setSelectedCategory('all');
@@ -246,6 +377,7 @@ export default function Menu() {
 
         {/* Bouton Panier Mobile - Enhanced */}
         <button
+          suppressHydrationWarning
           onClick={() => setIsCartOpen(true)}
           className="fixed bottom-6 right-6 bg-gradient-to-br from-primary-red to-primary-yellow hover:from-primary-yellow hover:to-primary-red text-white p-5 rounded-full shadow-2xl md:hidden z-40 transition-all duration-300 transform hover:scale-110 active:scale-95"
           aria-label={`Ouvrir le panier ${getTotalItems() > 0 ? `(${getTotalItems()} article${getTotalItems() > 1 ? 's' : ''})` : '(vide)'}`}
@@ -259,6 +391,17 @@ export default function Menu() {
             )}
           </div>
         </button>
+
+        {/* Combo Selection Modal */}
+        {selectedPackage && (
+          <ComboSelectionModal
+            isOpen={isComboModalOpen}
+            onClose={() => setIsComboModalOpen(false)}
+            package={selectedPackage}
+            onConfirm={handleComboConfirm}
+            allProducts={products}
+          />
+        )}
       </div>
     </div>
   );

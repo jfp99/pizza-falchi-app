@@ -13,6 +13,7 @@ const OrderItemSchema = new mongoose.Schema({
 });
 
 const OrderSchema = new mongoose.Schema({
+  orderId: { type: String, unique: true },
   customer: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   customerName: { type: String, required: true },
   email: { type: String },
@@ -51,6 +52,8 @@ const OrderSchema = new mongoose.Schema({
   phone: { type: String, required: true },
   notes: String,
   estimatedDelivery: Date,
+  notificationSent: { type: Boolean, default: false },
+  notificationSentAt: { type: Date },
 }, { timestamps: true });
 
 export default mongoose.models.Order || mongoose.model('Order', OrderSchema);

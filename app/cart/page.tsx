@@ -10,8 +10,7 @@ export default function CartPage() {
   const { items, updateQuantity, removeItem, clearCart, getTotalPrice } = useCart();
 
   const subtotal = getTotalPrice();
-  const deliveryFee = subtotal > 30 ? 0 : 5; // Free delivery above 30€
-  const total = subtotal + deliveryFee;
+  const total = subtotal;
 
   const handleRemoveItem = (productId: string, productName: string) => {
     removeItem(productId);
@@ -64,25 +63,16 @@ export default function CartPage() {
             <ArrowLeft className="w-5 h-5 transform group-hover:-translate-x-1 transition-transform" />
             Continuer mes achats
           </Link>
-          <div className="flex items-end justify-between">
-            <div>
-              <h1 className="text-5xl font-black text-gray-900 mb-2">
-                Mon Panier
-                <span className="ml-3 inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-primary-red to-soft-red text-white text-lg rounded-full">
-                  {items.reduce((acc, item) => acc + item.quantity, 0)}
-                </span>
-              </h1>
-              <p className="text-xl text-gray-600">
-                Finalisez votre commande gourmande
-              </p>
-            </div>
-            {subtotal < 30 && (
-              <div className="hidden lg:block bg-gradient-to-r from-primary-yellow/20 to-primary-yellow/10 border border-primary-yellow/30 rounded-2xl p-4">
-                <p className="text-sm font-semibold text-gray-800">
-                  Plus que {(30 - subtotal).toFixed(2)}€ pour la livraison gratuite ! 🚚
-                </p>
-              </div>
-            )}
+          <div>
+            <h1 className="text-5xl font-black text-gray-900 mb-2">
+              Mon Panier
+              <span className="ml-3 inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-primary-red to-soft-red text-white text-lg rounded-full">
+                {items.reduce((acc, item) => acc + item.quantity, 0)}
+              </span>
+            </h1>
+            <p className="text-xl text-gray-600">
+              Finalisez votre commande gourmande
+            </p>
           </div>
         </div>
 
@@ -209,22 +199,6 @@ export default function CartPage() {
                 </div>
               </div>
 
-              {/* Delivery Progress */}
-              {subtotal < 30 && (
-                <div className="mb-6 bg-gradient-to-r from-primary-yellow/10 to-primary-yellow/5 rounded-2xl p-4">
-                  <div className="flex justify-between text-sm font-medium text-gray-700 mb-2">
-                    <span>Livraison gratuite dans</span>
-                    <span>{(30 - subtotal).toFixed(2)}€</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                    <div
-                      className="bg-gradient-to-r from-primary-yellow to-soft-yellow h-full rounded-full transition-all duration-300"
-                      style={{ width: `${Math.min((subtotal / 30) * 100, 100)}%` }}
-                    />
-                  </div>
-                </div>
-              )}
-
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between text-gray-600">
                   <span className="flex items-center gap-2">
@@ -233,17 +207,6 @@ export default function CartPage() {
                   </span>
                   <span className="font-semibold text-gray-900">{subtotal.toFixed(2)}€</span>
                 </div>
-                <div className="flex justify-between text-gray-600">
-                  <span className="flex items-center gap-2">
-                    <Truck className="w-4 h-4" />
-                    Livraison
-                  </span>
-                  {deliveryFee === 0 ? (
-                    <span className="font-semibold text-green-600">GRATUIT</span>
-                  ) : (
-                    <span className="font-semibold text-gray-900">{deliveryFee.toFixed(2)}€</span>
-                  )}
-                </div>
                 <div className="pt-4 border-t-2 border-gray-200">
                   <div className="flex justify-between items-center">
                     <span className="text-xl font-bold text-gray-900">Total TTC</span>
@@ -251,11 +214,6 @@ export default function CartPage() {
                       <p className="text-3xl font-black bg-gradient-to-r from-primary-red to-soft-red bg-clip-text text-transparent">
                         {total.toFixed(2)}€
                       </p>
-                      {subtotal >= 30 && (
-                        <p className="text-xs text-green-600 font-semibold mt-1">
-                          Livraison offerte ! 🎉
-                        </p>
-                      )}
                     </div>
                   </div>
                 </div>
@@ -276,12 +234,12 @@ export default function CartPage() {
                 Ajouter d'autres articles
               </Link>
 
-              {/* Estimated Delivery */}
+              {/* Estimated Preparation */}
               <div className="mt-6 p-4 bg-gradient-to-r from-green-50 to-green-100/50 rounded-2xl border border-green-200">
                 <div className="flex items-center gap-3">
                   <Clock className="w-5 h-5 text-green-600" />
                   <div>
-                    <p className="text-sm font-semibold text-gray-900">Livraison estimée</p>
+                    <p className="text-sm font-semibold text-gray-900">Préparation estimée</p>
                     <p className="text-xs text-gray-600">30-45 minutes après commande</p>
                   </div>
                 </div>
@@ -294,12 +252,6 @@ export default function CartPage() {
                     <Shield className="w-4 h-4 text-green-600" />
                   </div>
                   <span className="text-sm font-medium text-gray-700">Paiement 100% sécurisé</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="bg-blue-100 p-1.5 rounded-full">
-                    <Truck className="w-4 h-4 text-blue-600" />
-                  </div>
-                  <span className="text-sm font-medium text-gray-700">Livraison express garantie</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="bg-primary-yellow/20 p-1.5 rounded-full">

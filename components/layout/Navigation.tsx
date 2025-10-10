@@ -89,6 +89,7 @@ export default function Navigation() {
               onMouseLeave={() => setShowCartPreview(false)}
             >
               <button
+                suppressHydrationWarning
                 className="relative bg-gradient-to-r from-primary-red to-primary-red-dark hover:from-primary-yellow hover:to-primary-red px-6 py-3 rounded-full font-bold text-white hover:text-charcoal transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-2xl flex items-center space-x-2"
                 aria-label={`Panier ${getTotalItems() > 0 ? `avec ${getTotalItems()} article${getTotalItems() > 1 ? 's' : ''}` : 'vide'}`}
               >
@@ -165,6 +166,7 @@ export default function Navigation() {
 
           {/* Menu Mobile Button */}
           <button
+            suppressHydrationWarning
             className="lg:hidden bg-primary-red hover:bg-primary-red-light p-2 rounded-lg transition-colors"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"

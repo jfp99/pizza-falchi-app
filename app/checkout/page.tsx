@@ -41,8 +41,7 @@ export default function Checkout() {
   }, [items, router]);
 
   const subtotal = getTotal();
-  const deliveryFee = deliveryType === 'delivery' && subtotal < 30 ? 5 : 0;
-  const total = subtotal + deliveryFee;
+  const total = subtotal;
 
   // Create payment intent when online payment is selected
   useEffect(() => {
@@ -135,7 +134,7 @@ export default function Checkout() {
         })),
         subtotal,
         tax: 0,
-        deliveryFee,
+        deliveryFee: 0,
         total,
         paymentMethod: formData.paymentMethod,
         paymentIntentId,
@@ -543,14 +542,6 @@ export default function Checkout() {
                 <div className="flex justify-between text-gray-600">
                   <span>Sous-total (TTC)</span>
                   <span className="font-semibold">{subtotal.toFixed(2)}€</span>
-                </div>
-                <div className="flex justify-between text-gray-600">
-                  <span>Livraison</span>
-                  {deliveryFee === 0 ? (
-                    <span className="font-semibold text-green-600">GRATUIT ✓</span>
-                  ) : (
-                    <span className="font-semibold">{deliveryFee.toFixed(2)}€</span>
-                  )}
                 </div>
                 <div className="border-t border-gray-200 pt-3 flex justify-between items-center">
                   <span className="text-xl font-black text-gray-900">Total TTC</span>

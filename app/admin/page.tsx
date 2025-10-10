@@ -20,10 +20,9 @@ interface RecentOrder {
   total: number;
   status: string;
   createdAt: string;
-  customer: {
-    name: string;
-    email: string;
-  };
+  customerName: string;
+  email?: string;
+  phone: string;
 }
 
 export default function AdminDashboard() {
@@ -141,8 +140,8 @@ export default function AdminDashboard() {
                   {recentOrders.map(order => (
                     <div key={order._id} className="flex justify-between items-center py-2 border-b">
                       <div>
-                        <p className="font-medium">{order.customer.name}</p>
-                        <p className="text-sm text-gray-600">{order.customer.email}</p>
+                        <p className="font-medium">{order.customerName}</p>
+                        <p className="text-sm text-gray-600">{order.email || order.phone}</p>
                       </div>
                       <div className="text-right">
                         <p className="font-bold">{order.total}€</p>

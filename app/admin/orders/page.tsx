@@ -1,7 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { Order } from '@/types';
-import { Package, Truck, Clock, Phone, Mail, MapPin, CheckCircle, XCircle, ChefHat } from 'lucide-react';
+import { Package, Truck, Clock, Phone, Mail, MapPin, CheckCircle, XCircle, ChefHat, MessageCircle } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function AdminOrders() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -45,6 +46,28 @@ export default function AdminOrders() {
       }
     } catch (error) {
       console.error('Error updating order:', error);
+    }
+  };
+
+  const sendWhatsAppNotification = async (orderId: string) => {
+    try {
+      toast.loading('Envoi de la notification WhatsApp...', { id: 'whatsapp-notification' });
+
+      const response = await fetch(`/api/orders/${orderId}/notify`, {
+        method: 'POST',
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        toast.success('✅ Message WhatsApp envoyé avec succès !', { id: 'whatsapp-notification' });
+        fetchOrders(); // Refresh to show notification status
+      } else {
+        toast.error(`❌ Échec de l'envoi: ${data.error || 'Erreur inconnue'}`, { id: 'whatsapp-notification' });
+      }
+    } catch (error) {
+      console.error('Error sending WhatsApp notification:', error);
+      toast.error('❌ Erreur lors de l\'envoi de la notification', { id: 'whatsapp-notification' });
     }
   };
 
@@ -94,26 +117,26 @@ export default function AdminOrders() {
   }
 
   return (
-    <div className="min-h-screen bg-warm-cream p-8">
+    <div className="min-h-screen bg-warm-cream p-4 sm:p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-black text-charcoal mb-4">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-4xl font-black text-charcoal mb-3 sm:mb-4">
             Gestion des <span className="text-primary-red">Commandes</span>
           </h1>
-          <p className="text-xl text-gray-600">
+          <p className="text-base sm:text-xl text-gray-600">
             {orders.length} commande{orders.length !== 1 ? 's' : ''} {selectedStatus !== 'all' ? `(${getStatusLabel(selectedStatus)})` : ''}
           </p>
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg mb-8">
-          <div className="flex flex-wrap gap-3">
+        <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-lg mb-6 sm:mb-8">
+          <div className="flex flex-wrap gap-2 sm:gap-3">
             {statusOptions.map(option => (
               <button
                 key={option.value}
                 onClick={() => setSelectedStatus(option.value)}
-                className={`px-6 py-3 rounded-xl font-semibold transition ${
+                className={`px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold transition ${
                   selectedStatus === option.value
                     ? 'bg-primary-red text-white'
                     : 'bg-gray-100 text-charcoal hover:bg-gray-200'
@@ -127,15 +150,15 @@ export default function AdminOrders() {
 
         {/* Orders List */}
         {orders.length === 0 ? (
-          <div className="bg-white rounded-3xl p-12 text-center shadow-lg">
-            <div className="text-6xl mb-4">📦</div>
-            <h3 className="text-2xl font-bold text-charcoal mb-2">Aucune commande</h3>
-            <p className="text-gray-600">Aucune commande ne correspond à vos critères</p>
+          <div className="bg-white rounded-2xl sm:rounded-3xl p-8 sm:p-12 text-center shadow-lg">
+            <div className="text-4xl sm:text-6xl mb-4">📦</div>
+            <h3 className="text-xl sm:text-2xl font-bold text-charcoal mb-2">Aucune commande</h3>
+            <p className="text-sm sm:text-base text-gray-600">Aucune commande ne correspond à vos critères</p>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {orders.map(order => (
-              <div key={order._id} className="bg-white rounded-3xl p-8 shadow-lg">
+              <div key={order._id} className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-lg">
                 {/* Order Header */}
                 <div className="flex flex-wrap justify-between items-start mb-6 gap-4">
                   <div>
@@ -272,21 +295,21 @@ export default function AdminOrders() {
                 </div>
 
                 {/* Status Update Buttons */}
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-2 sm:gap-3">
                   {order.status === 'pending' && (
                     <>
                       <button
                         onClick={() => updateOrderStatus(order._id!, 'confirmed')}
-                        className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl font-bold transition"
+                        className="flex items-center gap-1 sm:gap-2 bg-blue-500 hover:bg-blue-600 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold transition"
                       >
-                        <CheckCircle className="w-5 h-5" />
+                        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
                         Confirmer
                       </button>
                       <button
                         onClick={() => updateOrderStatus(order._id!, 'cancelled')}
-                        className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl font-bold transition"
+                        className="flex items-center gap-1 sm:gap-2 bg-red-500 hover:bg-red-600 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold transition"
                       >
-                        <XCircle className="w-5 h-5" />
+                        <XCircle className="w-4 h-4 sm:w-5 sm:h-5" />
                         Annuler
                       </button>
                     </>
@@ -294,29 +317,39 @@ export default function AdminOrders() {
                   {order.status === 'confirmed' && (
                     <button
                       onClick={() => updateOrderStatus(order._id!, 'preparing')}
-                      className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-xl font-bold transition"
+                      className="flex items-center gap-1 sm:gap-2 bg-orange-500 hover:bg-orange-600 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold transition"
                     >
-                      <ChefHat className="w-5 h-5" />
+                      <ChefHat className="w-4 h-4 sm:w-5 sm:h-5" />
                       En préparation
                     </button>
                   )}
                   {order.status === 'preparing' && (
                     <button
                       onClick={() => updateOrderStatus(order._id!, 'ready')}
-                      className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl font-bold transition"
+                      className="flex items-center gap-1 sm:gap-2 bg-green-500 hover:bg-green-600 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold transition"
                     >
-                      <Package className="w-5 h-5" />
+                      <Package className="w-4 h-4 sm:w-5 sm:h-5" />
                       Prête
                     </button>
                   )}
                   {order.status === 'ready' && (
-                    <button
-                      onClick={() => updateOrderStatus(order._id!, 'completed')}
-                      className="flex items-center gap-2 bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl font-bold transition"
-                    >
-                      <CheckCircle className="w-5 h-5" />
-                      Terminée
-                    </button>
+                    <>
+                      <button
+                        onClick={() => sendWhatsAppNotification(order._id!)}
+                        className="flex items-center gap-1 sm:gap-2 bg-green-600 hover:bg-green-700 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold transition"
+                      >
+                        <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <span className="hidden sm:inline">Notifier client</span>
+                        <span className="sm:hidden">Notifier</span>
+                      </button>
+                      <button
+                        onClick={() => updateOrderStatus(order._id!, 'completed')}
+                        className="flex items-center gap-1 sm:gap-2 bg-gray-500 hover:bg-gray-600 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-bold transition"
+                      >
+                        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+                        Terminée
+                      </button>
+                    </>
                   )}
                 </div>
               </div>

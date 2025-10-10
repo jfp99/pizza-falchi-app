@@ -13,7 +13,8 @@
     "test:coverage": "vitest --coverage",
     "seed:admin": "tsx scripts/seedAdmin.ts",
     "seed:atlas": "tsx scripts/seedAtlas.ts",
-    "seed:atlas:force": "tsx scripts/seedAtlas.ts --force"
+    "seed:atlas:force": "tsx scripts/seedAtlas.ts --force",
+    "seed:packages": "tsx scripts/seedPackages.ts"
   },
   "dependencies": {
     "@stripe/react-stripe-js": "^5.2.0",
@@ -29,7 +30,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.4.1",
-    "stripe": "^19.1.0"
+    "stripe": "^19.1.0",
+    "twilio": "^5.10.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.14",
