@@ -123,21 +123,21 @@ export default function Navigation() {
                       </div>
                       <div className="max-h-96 overflow-y-auto p-4 space-y-3">
                         {items.map((item) => (
-                          <div key={item._id} className="flex items-center gap-3 bg-gray-50 p-3 rounded-xl hover:bg-gray-100 transition-colors">
+                          <div key={item.product._id} className="flex items-center gap-3 bg-gray-50 p-3 rounded-xl hover:bg-gray-100 transition-colors">
                             <div className="flex-1">
-                              <h4 className="font-bold text-charcoal text-sm">{item.name}</h4>
+                              <h4 className="font-bold text-charcoal text-sm">{item.product.name}</h4>
                               <p className="text-xs text-gray-600">Quantité: {item.quantity}</p>
                             </div>
                             <div className="text-right">
-                              <p className="font-bold text-primary-red">{(item.price * item.quantity).toFixed(2)}€</p>
+                              <p className="font-bold text-primary-red">{(item.product.price * item.quantity).toFixed(2)}€</p>
                             </div>
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                removeItem(item._id);
+                                removeItem(item.product._id);
                               }}
                               className="p-2 hover:bg-red-100 rounded-lg transition-colors"
-                              aria-label="Retirer du panier"
+                              aria-label={`Retirer ${item.product.name} du panier`}
                             >
                               <Trash2 className="w-4 h-4 text-red-600" />
                             </button>
