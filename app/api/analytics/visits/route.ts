@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     const period = searchParams.get('period') || '7d'; // 7d, 30d, 90d
 
     // Calculate date range
-    let startDate = new Date();
+    const startDate = new Date();
     if (period === '7d') {
       startDate.setDate(startDate.getDate() - 7);
     } else if (period === '30d') {

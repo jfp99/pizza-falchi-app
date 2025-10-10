@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status'); // handled or unhandled
 
     // Calculate date range
-    let startDate = new Date();
+    const startDate = new Date();
     if (period === '7d') {
       startDate.setDate(startDate.getDate() - 7);
     } else if (period === '30d') {

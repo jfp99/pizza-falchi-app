@@ -1,13 +1,34 @@
-import * as dotenv from 'dotenv';
-import * as path from 'path';
 import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 import Product from '../models/Product';
-import { connectDB } from '../lib/mongodb';
+import dotenv from 'dotenv';
+import path from 'path';
 
-// Load environment variables from .env.local
-dotenv.config({ path: path.join(process.cwd(), '.env.local') });
+// Load environment variables
+dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
 
-const products = [
+if (!process.env.MONGODB_URI) {
+  console.error('❌ MONGODB_URI is not defined in .env.local');
+  process.exit(1);
+}
+
+const MONGODB_URI = process.env.MONGODB_URI;
+
+// User model for seeding
+const UserSchema = new mongoose.Schema({
+  name: String,
+  email: { type: String, unique: true },
+  password: String,
+  role: { type: String, enum: ['admin', 'customer'], default: 'customer' },
+  phone: String,
+}, {
+  timestamps: true
+});
+
+const User = mongoose.models.User || mongoose.model('User', UserSchema);
+
+// Product Data - Updated with real Pizza Truck products
+const pizzaFalchiProducts = [
   // NOS CLASSIQUES - Pizzas Tomate
   {
     name: "Anchois",
@@ -660,32 +681,181 @@ const products = [
   }
 ];
 
-async function seedDatabase() {
+// Admin users for Pizza Falchi
+const adminUsers = [
+  {
+    name: 'Admin Pizza Falchi',
+    email: 'admin@pizzafalchi.com',
+    password: 'PizzaFalchi2024!',
+    role: 'admin',
+    phone: '+33442920308'
+  },
+  {
+    name: 'Marco Falchi',
+    email: 'marco@pizzafalchi.com',
+    password: 'Marco2024!',
+    role: 'admin',
+    phone: '+33442920308'
+  },
+  {
+    name: 'Client Test',
+    email: 'client@example.com',
+    password: 'client123',
+    role: 'customer',
+    phone: '+33442920308'
+  }
+];
+
+async function seedAtlas() {
   try {
-    console.log('🔌 Connecting to database...');
-    await connectDB();
+    console.log('');
+    console.log('🔗 Connexion à MongoDB Atlas...');
+    console.log(`📍 URI: ${MONGODB_URI.replace(/:[^:]*@/, ':****@')}`);
 
-    console.log('🗑️  Clearing existing products...');
-    await Product.deleteMany({});
+    await mongoose.connect(MONGODB_URI);
 
-    console.log('🌱 Seeding products...');
-    const createdProducts = await Product.insertMany(products);
+    console.log('✅ Connecté avec succès à MongoDB Atlas!');
+    console.log('');
 
-    console.log(`✅ Successfully seeded ${createdProducts.length} products!`);
-    console.log('\n📊 Summary:');
-    console.log(`   - Pizzas: ${createdProducts.filter(p => p.category === 'pizza').length}`);
-    console.log(`   - Boissons: ${createdProducts.filter(p => p.category === 'boisson').length}`);
+    // Check if data already exists
+    const existingProducts = await Product.countDocuments();
+    const existingUsers = await User.countDocuments();
+
+    if (existingProducts > 0 || existingUsers > 0) {
+      console.log('⚠️  La base de données contient déjà des données:');
+      console.log(`   - ${existingProducts} produits`);
+      console.log(`   - ${existingUsers} utilisateurs`);
+      console.log('');
+      console.log('❓ Voulez-vous:');
+      console.log('   1. Effacer et réinitialiser (ATTENTION: perte de données!)');
+      console.log('   2. Ajouter les données manquantes uniquement');
+      console.log('   3. Annuler');
+      console.log('');
+      console.log('💡 Pour forcer la réinitialisation, utilisez: npm run seed:atlas:force');
+      console.log('');
+
+      if (process.argv.includes('--force')) {
+        console.log('🗑️  Mode FORCE activé - Suppression de toutes les données...');
+        if (mongoose.connection.db) {
+          await mongoose.connection.db.dropDatabase();
+          console.log('✅ Base de données nettoyée');
+        }
+      } else {
+        console.log('ℹ️  Ajout des données manquantes uniquement...');
+      }
+    }
+
+    console.log('');
+    console.log('👤 Création des utilisateurs...');
+
+    // Create users
+    for (const userData of adminUsers) {
+      const existingUser = await User.findOne({ email: userData.email });
+
+      if (!existingUser) {
+        const hashedPassword = await bcrypt.hash(userData.password, 12);
+        await User.create({
+          ...userData,
+          password: hashedPassword
+        });
+        console.log(`   ✅ ${userData.name} (${userData.email})`);
+      } else {
+        console.log(`   ⏭️  ${userData.name} existe déjà`);
+      }
+    }
+
+    console.log('');
+    console.log('🍕 Création des produits...');
+
+    // Create products
+    let added = 0;
+    let skipped = 0;
+
+    for (const productData of pizzaFalchiProducts) {
+      const existingProduct = await Product.findOne({ name: productData.name });
+
+      if (!existingProduct) {
+        await Product.create(productData);
+        added++;
+        console.log(`   ✅ ${productData.name} (${productData.category})`);
+      } else {
+        skipped++;
+        console.log(`   ⏭️  ${productData.name} existe déjà`);
+      }
+    }
+
+    // Create indexes for performance
+    console.log('');
+    console.log('🔍 Création des index...');
+    await Product.collection.createIndex({ category: 1 });
+    await Product.collection.createIndex({ name: 'text', description: 'text' });
+    await Product.collection.createIndex({ available: 1 });
+    await Product.collection.createIndex({ popular: 1 });
+    console.log('   ✅ Index créés avec succès');
+
+    // Stats
+    const totalProducts = await Product.countDocuments();
+    const totalUsers = await User.countDocuments();
+    const productsByCategory = await Product.aggregate([
+      { $group: { _id: '$category', count: { $sum: 1 } } },
+      { $sort: { _id: 1 } }
+    ]);
+
+    console.log('');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('✅ BASE DE DONNÉES PIZZA FALCHI INITIALISÉE!');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('');
+    console.log('📊 STATISTIQUES:');
+    console.log(`   • Total produits: ${totalProducts}`);
+    console.log(`   • Total utilisateurs: ${totalUsers}`);
+    console.log('');
+    console.log('📦 PRODUITS PAR CATÉGORIE:');
+    productsByCategory.forEach(cat => {
+      const emoji = cat._id === 'pizza' ? '🍕' :
+                    cat._id === 'boisson' ? '🥤' :
+                    cat._id === 'dessert' ? '🍰' : '🍴';
+      console.log(`   ${emoji} ${cat._id}: ${cat.count}`);
+    });
+    console.log('');
+    console.log('📈 CETTE SESSION:');
+    console.log(`   • Ajoutés: ${added}`);
+    console.log(`   • Ignorés (existants): ${skipped}`);
+    console.log('');
+    console.log('🔑 COMPTES ADMIN:');
+    console.log('   📧 admin@pizzafalchi.com');
+    console.log('   🔒 PizzaFalchi2024!');
+    console.log('');
+    console.log('   📧 marco@pizzafalchi.com');
+    console.log('   🔒 Marco2024!');
+    console.log('');
+    console.log('🚀 PRÊT! Démarrez l\'application avec:');
+    console.log('   npm run dev');
+    console.log('');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('');
 
     process.exit(0);
   } catch (error) {
-    console.error('❌ Error seeding database:', error);
+    console.error('');
+    console.error('❌ ERREUR lors du seed:', error);
+    console.error('');
+    if (error instanceof Error) {
+      console.error('Message:', error.message);
+      if (error.stack) {
+        console.error('Stack:', error.stack);
+      }
+    }
     process.exit(1);
   }
 }
 
-// Run the seeder
-if (require.main === module) {
-  seedDatabase();
-}
+// Gestion propre de la fermeture
+process.on('SIGINT', async () => {
+  console.log('\n🔄 Fermeture de la connexion MongoDB...');
+  await mongoose.connection.close();
+  process.exit(0);
+});
 
-export default seedDatabase;
+// Execute the seed function
+seedAtlas();

@@ -2,6 +2,35 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Heart, Users, Award, Clock, MapPin, Phone, Mail, ChefHat, Flame, Leaf } from 'lucide-react';
 import SpecialOfferBanner from '@/components/promotions/SpecialOfferBanner';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Notre Histoire',
+  description: 'Découvrez l\'histoire de Pizza Falchi, une passion transmise de génération en génération depuis 2001. Notre équipe prépare des pizzas artisanales avec des ingrédients 100% italiens à Puyricard.',
+  openGraph: {
+    title: 'Notre Histoire | Pizza Falchi',
+    description: 'Une passion transmise de génération en génération, depuis les ruelles de Naples jusqu\'à votre quartier. Découvrez notre histoire, nos valeurs et notre équipe.',
+    url: 'https://www.pizzafalchi.com/about',
+    type: 'website',
+    images: [
+      {
+        url: '/images/about-img.avif',
+        width: 1200,
+        height: 630,
+        alt: 'Pizza Falchi - Notre Histoire',
+      }
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Notre Histoire | Pizza Falchi',
+    description: 'Une passion transmise de génération en génération, depuis les ruelles de Naples jusqu\'à votre quartier.',
+    images: ['/images/about-img.avif'],
+  },
+  alternates: {
+    canonical: '/about',
+  },
+};
 
 export default function About() {
   return (

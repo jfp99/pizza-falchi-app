@@ -10,7 +10,10 @@ interface ProductCardProps {
 
 export default function ProductCard({ product, onAddToCart }: ProductCardProps) {
   const [imageError, setImageError] = useState(false);
-  const [imageSrc, setImageSrc] = useState(product.image || '/images/pizza-placeholder.jpg');
+
+  const placeholderImage = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"%3E%3Crect width="400" height="300" fill="%23f3f4f6"/%3E%3Ctext x="50%25" y="45%25" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-size="64" fill="%23d1d5db"%3E🍕%3C/text%3E%3Ctext x="50%25" y="65%25" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="%239ca3af" font-weight="600"%3E' + encodeURIComponent(product.category === 'boisson' ? '🥤' : product.category === 'dessert' ? '🍰' : '🍕') + '%3C/text%3E%3C/svg%3E';
+
+  const [imageSrc, setImageSrc] = useState(product.image || placeholderImage);
 
   const getIngredientIcon = (ingredient: string) => {
     const lowerIngredient = ingredient.toLowerCase();
@@ -54,7 +57,7 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
           onError={() => {
             if (!imageError) {
               setImageError(true);
-              setImageSrc('/images/pizza-placeholder.jpg');
+              setImageSrc(placeholderImage);
             }
           }}
         />

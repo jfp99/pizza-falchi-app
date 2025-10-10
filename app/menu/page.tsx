@@ -13,7 +13,6 @@ const categories: Category[] = [
   { id: 'all', name: 'Tout le Menu', icon: '🍕' },
   { id: 'pizza', name: 'Pizzas', icon: '🍕' },
   { id: 'boisson', name: 'Boissons', icon: '🥤' },
-  { id: 'dessert', name: 'Desserts', icon: '🍰' },
 ];
 
 export default function Menu() {
@@ -136,19 +135,34 @@ export default function Menu() {
       <SpecialOfferBanner />
 
       <div className="max-w-7xl mx-auto px-4 pb-20">
-        {/* Filtres et Recherche - Clean Design */}
-        <div className="mb-12 space-y-6">
-          {/* Search Bar */}
-          <div className="relative max-w-2xl mx-auto">
-            <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+        {/* Filtres et Recherche - Enhanced Design */}
+        <div className="mb-12 space-y-8">
+          {/* Search Bar - Enhanced */}
+          <div className="relative max-w-3xl mx-auto group">
+            <div className="absolute left-5 top-1/2 transform -translate-y-1/2 z-10">
+              <div className="bg-gradient-to-br from-primary-red to-primary-yellow p-2 rounded-xl shadow-md group-focus-within:scale-110 transition-transform duration-300">
+                <Search className="w-5 h-5 text-white" />
+              </div>
+            </div>
             <input
               suppressHydrationWarning
               type="text"
               placeholder="Rechercher une pizza, un ingrédient..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-16 pr-6 py-4 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-primary-red focus:border-primary-red transition-all shadow-sm text-lg"
+              className="w-full pl-20 pr-14 py-5 bg-white border-2 border-gray-200 rounded-3xl focus:border-primary-red focus:shadow-xl hover:shadow-lg transition-all shadow-md text-lg font-medium text-charcoal placeholder:text-gray-400 placeholder:font-normal"
             />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm('')}
+                className="absolute right-5 top-1/2 transform -translate-y-1/2 bg-gray-100 hover:bg-primary-red text-gray-600 hover:text-white p-2 rounded-xl transition-all duration-300 hover:scale-110"
+                aria-label="Clear search"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
           </div>
 
           {/* Category Filter */}
@@ -159,22 +173,30 @@ export default function Menu() {
           />
         </div>
 
-        {/* Product Count & Filters Summary */}
-        <div className="flex justify-between items-center mb-8 bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-          <div className="flex items-center gap-3">
-            <div className="bg-primary-red p-2 rounded-xl">
+        {/* Product Count & Filters Summary - Enhanced */}
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-10 bg-white rounded-2xl p-5 shadow-lg border-2 border-gray-100 hover:shadow-xl transition-all duration-300">
+          <div className="flex items-center gap-4">
+            <div className="bg-gradient-to-br from-primary-red to-primary-yellow p-3 rounded-xl shadow-md">
               <Filter className="w-5 h-5 text-white" />
             </div>
-            <span className="font-bold text-charcoal">
-              {filteredProducts.length} produit{filteredProducts.length !== 1 ? 's' : ''} trouvé{filteredProducts.length !== 1 ? 's' : ''}
-            </span>
+            <div className="flex flex-col">
+              <span className="text-2xl font-black text-charcoal">
+                {filteredProducts.length}
+              </span>
+              <span className="text-sm text-gray-600 font-medium">
+                produit{filteredProducts.length !== 1 ? 's' : ''} trouvé{filteredProducts.length !== 1 ? 's' : ''}
+              </span>
+            </div>
           </div>
-          {searchTerm && (
+          {(searchTerm || selectedCategory !== 'all') && (
             <button
-              onClick={() => setSearchTerm('')}
-              className="text-sm text-primary-red hover:text-primary-red-dark font-semibold transition"
+              onClick={() => {
+                setSearchTerm('');
+                setSelectedCategory('all');
+              }}
+              className="mt-3 sm:mt-0 bg-gray-100 hover:bg-gradient-to-r hover:from-primary-red hover:to-primary-yellow text-charcoal hover:text-white px-6 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 hover:scale-105 shadow-sm hover:shadow-md"
             >
-              Réinitialiser
+              Réinitialiser les filtres
             </button>
           )}
         </div>
@@ -190,19 +212,25 @@ export default function Menu() {
           ))}
         </div>
 
-        {/* Message si aucun résultat */}
+        {/* Message si aucun résultat - Enhanced */}
         {filteredProducts.length === 0 && (
           <div className="text-center py-20">
-            <div className="bg-white rounded-3xl p-12 max-w-md mx-auto shadow-lg">
-              <div className="text-7xl mb-6">🍕</div>
-              <h3 className="text-3xl font-black text-charcoal mb-4">Aucun résultat trouvé</h3>
-              <p className="text-lg text-gray-600 mb-6">Essayez de modifier vos critères de recherche</p>
+            <div className="bg-white rounded-3xl p-12 max-w-lg mx-auto shadow-2xl border-2 border-gray-100 hover:shadow-3xl transition-all duration-300">
+              <div className="inline-block bg-soft-red-lighter rounded-3xl p-6 mb-6">
+                <div className="text-7xl">🍕</div>
+              </div>
+              <h3 className="text-3xl md:text-4xl font-black text-charcoal mb-4">Aucun résultat trouvé</h3>
+              <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                Nous n'avons trouvé aucun produit correspondant à votre recherche.
+                <br />
+                <span className="text-sm">Essayez de modifier vos critères de recherche</span>
+              </p>
               <button
                 onClick={() => {
                   setSearchTerm('');
                   setSelectedCategory('all');
                 }}
-                className="bg-primary-red hover:bg-primary-red-dark text-white px-8 py-3 rounded-2xl font-bold transition-all"
+                className="bg-gradient-to-r from-primary-red to-primary-yellow hover:from-primary-yellow hover:to-primary-red text-white px-10 py-4 rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
               >
                 Réinitialiser les filtres
               </button>
@@ -216,15 +244,15 @@ export default function Menu() {
           onClose={() => setIsCartOpen(false)}
         />
 
-        {/* Bouton Panier Mobile - Clean */}
+        {/* Bouton Panier Mobile - Enhanced */}
         <button
           onClick={() => setIsCartOpen(true)}
-          className="fixed bottom-6 right-6 bg-primary-red hover:bg-primary-red-dark text-white p-5 rounded-full shadow-xl md:hidden z-40 transition-all"
+          className="fixed bottom-6 right-6 bg-gradient-to-br from-primary-red to-primary-yellow hover:from-primary-yellow hover:to-primary-red text-white p-5 rounded-full shadow-2xl md:hidden z-40 transition-all duration-300 transform hover:scale-110 active:scale-95"
         >
           <div className="relative">
-            <span className="text-2xl">🛒</span>
+            <span className="text-2xl drop-shadow-lg">🛒</span>
             {getTotalItems() > 0 && (
-              <span className="absolute -top-3 -right-3 bg-primary-yellow text-charcoal rounded-full w-7 h-7 text-sm flex items-center justify-center font-black shadow-lg">
+              <span className="absolute -top-3 -right-3 bg-white text-primary-red rounded-full w-7 h-7 text-sm flex items-center justify-center font-black shadow-xl border-2 border-primary-red animate-pulse">
                 {getTotalItems()}
               </span>
             )}

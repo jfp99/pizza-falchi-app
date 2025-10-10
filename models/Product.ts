@@ -12,6 +12,7 @@ const ProductSchema = new mongoose.Schema({
   image: String,
   ingredients: [String],
   available: { type: Boolean, default: true },
+  customizable: { type: Boolean, default: false },
   popular: { type: Boolean, default: false },
   spicy: { type: Boolean, default: false },
   vegetarian: { type: Boolean, default: false },

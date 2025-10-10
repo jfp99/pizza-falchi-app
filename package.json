@@ -7,16 +7,13 @@
     "dev:turbo": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
-    "seed": "tsx scripts/seedProducts.ts",
     "seed:admin": "tsx scripts/seedAdmin.ts",
-    "verify-images": "node scripts/verifyImages.js",
-    "update:images": "tsx scripts/updateProductImagesLocal.ts",
-    "check:images": "tsx scripts/checkImages.ts",
-    "test:auth": "tsx scripts/testAuth.ts"
+    "seed:atlas": "tsx scripts/seedAtlas.ts",
+    "seed:atlas:force": "tsx scripts/seedAtlas.ts --force"
   },
   "dependencies": {
     "@stripe/react-stripe-js": "^5.2.0",

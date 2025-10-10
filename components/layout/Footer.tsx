@@ -11,8 +11,8 @@ export default function Footer() {
       <div className="h-1 bg-gradient-to-r from-primary-red via-primary-yellow to-primary-red"></div>
 
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Main Content - Compact Single Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
+        {/* Main Content - Compact Single Row with Aligned Headers */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           {/* Logo & Tagline */}
           <div className="lg:col-span-3">
             <Link href="/" className="flex items-center space-x-2 mb-3 group">
@@ -61,24 +61,40 @@ export default function Footer() {
 
           {/* Navigation Links */}
           <div className="lg:col-span-2">
-            <h3 className="text-sm font-bold mb-2 text-primary-yellow uppercase tracking-wider">Navigation</h3>
-            <ul className="space-y-1.5">
-              <li><Link href="/" className="text-gray-300 hover:text-primary-yellow transition-colors text-sm">Accueil</Link></li>
-              <li><Link href="/menu" className="text-gray-300 hover:text-primary-red transition-colors text-sm">Menu</Link></li>
-              <li><Link href="/about" className="text-gray-300 hover:text-primary-yellow transition-colors text-sm">À Propos</Link></li>
-              <li><Link href="/contact" className="text-gray-300 hover:text-primary-red transition-colors text-sm">Contact</Link></li>
+            <h3 className="text-sm font-bold mb-3 text-primary-yellow uppercase tracking-wider">Navigation</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link href="/" className="text-gray-300 hover:text-primary-yellow transition-all duration-300 text-sm inline-block hover:translate-x-1 hover:font-semibold">
+                  → Accueil
+                </Link>
+              </li>
+              <li>
+                <Link href="/menu" className="text-gray-300 hover:text-primary-red transition-all duration-300 text-sm inline-block hover:translate-x-1 hover:font-semibold">
+                  → Menu
+                </Link>
+              </li>
+              <li>
+                <Link href="/about" className="text-gray-300 hover:text-primary-yellow transition-all duration-300 text-sm inline-block hover:translate-x-1 hover:font-semibold">
+                  → À Propos
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="text-gray-300 hover:text-primary-red transition-all duration-300 text-sm inline-block hover:translate-x-1 hover:font-semibold">
+                  → Contact
+                </Link>
+              </li>
             </ul>
           </div>
 
           {/* Contact Info - Compact */}
           <div className="lg:col-span-4">
-            <h3 className="text-sm font-bold mb-2 text-primary-yellow uppercase tracking-wider">Contact</h3>
+            <h3 className="text-sm font-bold mb-3 text-primary-yellow uppercase tracking-wider">Contact</h3>
             <div className="space-y-2 text-sm">
-              <a href="tel:+33442920308" className="flex items-center gap-2 text-gray-300 hover:text-primary-yellow transition-colors">
+              <a href="tel:+33442920308" className="flex items-center gap-2 text-gray-300 hover:text-primary-yellow transition-all duration-300 hover:translate-x-1">
                 <Phone className="w-3.5 h-3.5" />
                 <span>04 42 92 03 08</span>
               </a>
-              <a href="mailto:pizzafalchipro@gmail.com" className="flex items-center gap-2 text-gray-300 hover:text-primary-red transition-colors">
+              <a href="mailto:pizzafalchipro@gmail.com" className="flex items-center gap-2 text-gray-300 hover:text-primary-red transition-all duration-300 hover:translate-x-1">
                 <Mail className="w-3.5 h-3.5" />
                 <span>pizzafalchipro@gmail.com</span>
               </a>
@@ -91,7 +107,7 @@ export default function Footer() {
 
           {/* Hours - Compact */}
           <div className="lg:col-span-3">
-            <h3 className="text-sm font-bold mb-2 text-primary-yellow uppercase tracking-wider">Horaires</h3>
+            <h3 className="text-sm font-bold mb-3 text-primary-yellow uppercase tracking-wider">Horaires</h3>
             <div className="text-sm space-y-1">
               <div className="flex items-center gap-2 text-gray-300">
                 <Clock className="w-3.5 h-3.5" />
