@@ -3,8 +3,14 @@ import { connectDB } from '@/lib/mongodb';
 import Product from '@/models/Product';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { readLimiter, apiLimiter } from '@/lib/rateLimiter';
+import { productSchema } from '@/lib/validations/product';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // Apply rate limiting for read operations
+  const rateLimitResponse = await readLimiter(request);
+  if (rateLimitResponse) return rateLimitResponse;
+
   try {
     await connectDB();
     const products = await Product.find({ available: true }).sort({ category: 1, name: 1 });
@@ -19,6 +25,10 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  // Apply rate limiting for product creation
+  const rateLimitResponse = await apiLimiter(request);
+  if (rateLimitResponse) return rateLimitResponse;
+
   try {
     // Check if user is admin
     const session = await getServerSession(authOptions);
@@ -32,21 +42,22 @@ export async function POST(request: NextRequest) {
     await connectDB();
     const body = await request.json();
 
-    const product = await Product.create({
-      name: body.name,
-      description: body.description,
-      price: body.price,
-      category: body.category,
-      image: body.image,
-      ingredients: body.ingredients || [],
-      available: body.available !== undefined ? body.available : true,
-      popular: body.popular || false,
-      spicy: body.spicy || false,
-      vegetarian: body.vegetarian || false,
-      tags: body.tags || [],
-      stock: body.stock || 100,
-      minStock: body.minStock || 10
-    });
+    // Validate input with Zod
+    const validationResult = productSchema.safeParse(body);
+
+    if (!validationResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Données de produit invalides',
+          details: validationResult.error.flatten().fieldErrors,
+        },
+        { status: 400 }
+      );
+    }
+
+    const validatedData = validationResult.data;
+
+    const product = await Product.create(validatedData);
 
     return NextResponse.json(product, { status: 201 });
   } catch (error) {

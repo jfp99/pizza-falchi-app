@@ -1,9 +1,10 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Product, CartItem } from '@/types';
 
 export function useCart() {
   const [items, setItems] = useState<CartItem[]>([]);
+  const isInitialized = useRef(false);
 
   // Charger le panier depuis le localStorage au montage
   useEffect(() => {
@@ -18,11 +19,14 @@ export function useCart() {
       localStorage.removeItem('pizza-cart');
       setItems([]);
     }
+    isInitialized.current = true;
   }, []);
 
-  // Sauvegarder le panier dans le localStorage à chaque changement
+  // Sauvegarder le panier dans le localStorage à chaque changement (mais pas au premier rendu)
   useEffect(() => {
-    localStorage.setItem('pizza-cart', JSON.stringify(items));
+    if (isInitialized.current) {
+      localStorage.setItem('pizza-cart', JSON.stringify(items));
+    }
   }, [items]);
 
   const addItem = (product: Product) => {

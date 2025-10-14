@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X, ShoppingCart, Phone, Trash2 } from 'lucide-react';
@@ -9,6 +9,18 @@ export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [showCartPreview, setShowCartPreview] = useState(false);
   const { getTotalItems, items, removeItem, getTotalPrice } = useCart();
+
+  // Handle Escape key to close cart preview
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && showCartPreview) {
+        setShowCartPreview(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [showCartPreview]);
 
   return (
     <nav className="bg-gradient-to-r from-charcoal via-gray-900 to-charcoal shadow-2xl sticky top-0 z-50 border-b-4 border-primary-yellow">
@@ -92,6 +104,16 @@ export default function Navigation() {
                 suppressHydrationWarning
                 className="relative bg-gradient-to-r from-primary-red to-primary-red-dark hover:from-primary-yellow hover:to-primary-red px-6 py-3 rounded-full font-bold text-white hover:text-charcoal transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-2xl flex items-center space-x-2"
                 aria-label={`Panier ${getTotalItems() > 0 ? `avec ${getTotalItems()} article${getTotalItems() > 1 ? 's' : ''}` : 'vide'}`}
+                aria-expanded={showCartPreview}
+                aria-haspopup="true"
+                onClick={() => setShowCartPreview(!showCartPreview)}
+                onFocus={() => setShowCartPreview(true)}
+                onBlur={(e) => {
+                  // Only hide if focus is moving outside the cart preview
+                  if (!e.currentTarget.parentElement?.contains(e.relatedTarget as Node)) {
+                    setShowCartPreview(false);
+                  }
+                }}
               >
                 <ShoppingCart className="w-5 h-5" />
                 <span>Panier</span>
@@ -104,7 +126,17 @@ export default function Navigation() {
 
               {/* Cart Preview Dropdown */}
               {showCartPreview && (
-                <div className="absolute right-0 top-full mt-2 w-96 bg-white rounded-2xl shadow-2xl border-2 border-gray-200 overflow-hidden">
+                <div
+                  className="absolute right-0 top-full mt-2 w-96 bg-white rounded-2xl shadow-2xl border-2 border-gray-200 overflow-hidden"
+                  role="region"
+                  aria-label="Aperçu du panier"
+                  onBlur={(e) => {
+                    // Hide preview if focus moves outside
+                    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                      setShowCartPreview(false);
+                    }
+                  }}
+                >
                   {getTotalItems() === 0 ? (
                     <div className="p-8 text-center">
                       <ShoppingCart className="w-16 h-16 mx-auto text-gray-300 mb-4" />

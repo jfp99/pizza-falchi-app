@@ -2,12 +2,13 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/contexts/CartContext';
-import { Package, Truck, User, Phone, Mail, MapPin, CreditCard, FileText, ShoppingBag, ArrowLeft, Check, Loader2 } from 'lucide-react';
+import { Package, Truck, User, Phone, Mail, MapPin, CreditCard, FileText, ShoppingBag, ArrowLeft, Check, Loader2, Banknote, Globe } from 'lucide-react';
 import Link from 'next/link';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import StripePaymentForm from '@/components/checkout/StripePaymentForm';
 import toast from 'react-hot-toast';
+import { SPACING, ROUNDED, SHADOWS, TRANSITIONS } from '@/lib/design-constants';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
 
@@ -212,11 +213,11 @@ export default function Checkout() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="grid lg:grid-cols-3 gap-8">
+        <form onSubmit={handleSubmit} className={`grid lg:grid-cols-3 ${SPACING.cardGap}`}>
           {/* Left Column - Order Details */}
           <div className="lg:col-span-2 space-y-6">
             {/* Delivery Type Selection */}
-            <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100">
+            <div className={`bg-white ${ROUNDED.xl} ${SPACING.cardPaddingLg} ${SHADOWS.md} border border-gray-100`}>
               <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                 <div className="bg-primary-red/10 p-2 rounded-xl">
                   <ShoppingBag className="w-6 h-6 text-primary-red" />
@@ -263,7 +264,7 @@ export default function Checkout() {
             </div>
 
             {/* Customer Information */}
-            <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100">
+            <div className={`bg-white ${ROUNDED.xl} ${SPACING.cardPaddingLg} ${SHADOWS.md} border border-gray-100`}>
               <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                 <div className="bg-primary-red/10 p-2 rounded-xl">
                   <User className="w-6 h-6 text-primary-red" />
@@ -340,7 +341,7 @@ export default function Checkout() {
 
             {/* Delivery Address (conditional) */}
             {deliveryType === 'delivery' && (
-              <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100">
+              <div className={`bg-white ${ROUNDED.xl} ${SPACING.cardPaddingLg} ${SHADOWS.md} border border-gray-100`}>
                 <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                   <div className="bg-primary-red/10 p-2 rounded-xl">
                     <MapPin className="w-6 h-6 text-primary-red" />
@@ -417,7 +418,7 @@ export default function Checkout() {
             )}
 
             {/* Payment Method */}
-            <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100">
+            <div className={`bg-white ${ROUNDED.xl} ${SPACING.cardPaddingLg} ${SHADOWS.md} border border-gray-100`}>
               <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                 <div className="bg-primary-red/10 p-2 rounded-xl">
                   <CreditCard className="w-6 h-6 text-primary-red" />
@@ -439,7 +440,9 @@ export default function Checkout() {
                       <Check className="w-3 h-3" />
                     </div>
                   )}
-                  <div className="text-3xl mb-2">💵</div>
+                  <div className="flex items-center justify-center mb-2">
+                    <Banknote className="w-8 h-8 text-primary-red" />
+                  </div>
                   <p className="font-bold text-gray-900">Espèces</p>
                   <p className="text-xs text-gray-500 mt-1">À la livraison</p>
                 </button>
@@ -458,7 +461,9 @@ export default function Checkout() {
                       <Check className="w-3 h-3" />
                     </div>
                   )}
-                  <div className="text-3xl mb-2">💳</div>
+                  <div className="flex items-center justify-center mb-2">
+                    <CreditCard className="w-8 h-8 text-primary-red" />
+                  </div>
                   <p className="font-bold text-gray-900">Carte</p>
                   <p className="text-xs text-gray-500 mt-1">À la livraison</p>
                 </button>
@@ -471,7 +476,9 @@ export default function Checkout() {
                   <div className="absolute top-2 right-2 bg-gray-400 text-white px-2 py-0.5 rounded-full text-xs font-bold">
                     Bientôt
                   </div>
-                  <div className="text-3xl mb-2 opacity-50">🌐</div>
+                  <div className="flex items-center justify-center mb-2 opacity-50">
+                    <Globe className="w-8 h-8 text-gray-400" />
+                  </div>
                   <p className="font-bold text-gray-500">En ligne</p>
                   <p className="text-xs text-gray-400 mt-1">Temporairement indisponible</p>
                 </button>
@@ -494,7 +501,7 @@ export default function Checkout() {
             </div>
 
             {/* Notes */}
-            <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100">
+            <div className={`bg-white ${ROUNDED.xl} ${SPACING.cardPaddingLg} ${SHADOWS.md} border border-gray-100`}>
               <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                 <div className="bg-primary-red/10 p-2 rounded-xl">
                   <FileText className="w-6 h-6 text-primary-red" />

@@ -30,4 +30,9 @@ const ProductSchema = new mongoose.Schema({
   timestamps: true
 });
 
+// Add indexes for frequently queried fields
+ProductSchema.index({ category: 1, available: 1 }); // For filtering by category and availability
+ProductSchema.index({ available: 1, popular: 1 }); // For getting popular available products
+ProductSchema.index({ name: 'text', description: 'text' }); // For text search
+
 export default mongoose.models.Product || mongoose.model('Product', ProductSchema);

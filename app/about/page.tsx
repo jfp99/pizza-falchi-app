@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { Heart, Users, Award, Clock, MapPin, Phone, Mail, ChefHat, Flame, Leaf } from 'lucide-react';
 import SpecialOfferBanner from '@/components/promotions/SpecialOfferBanner';
 import type { Metadata } from 'next';
+import { SPACING, ROUNDED, SHADOWS, TRANSITIONS } from '@/lib/design-constants';
 
 export const metadata: Metadata = {
   title: 'Notre Histoire',
@@ -133,9 +134,9 @@ export default function About() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className={`grid md:grid-cols-2 lg:grid-cols-4 ${SPACING.cardGap}`}>
             {/* Value 1 */}
-            <div className="bg-warm-cream p-6 rounded-3xl shadow-lg hover:shadow-xl transition-shadow">
+            <div className={`bg-warm-cream ${SPACING.cardPadding} ${ROUNDED.xl} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base}`}>
               <div className="bg-primary-red p-4 rounded-2xl w-14 h-14 flex items-center justify-center mb-5">
                 <Heart className="w-7 h-7 text-white" />
               </div>
@@ -146,7 +147,7 @@ export default function About() {
             </div>
 
             {/* Value 2 */}
-            <div className="bg-warm-cream p-6 rounded-3xl shadow-lg hover:shadow-xl transition-shadow">
+            <div className={`bg-warm-cream ${SPACING.cardPadding} ${ROUNDED.xl} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base}`}>
               <div className="bg-gray-500 p-4 rounded-2xl w-14 h-14 flex items-center justify-center mb-5">
                 <Award className="w-7 h-7 text-white" />
               </div>
@@ -157,7 +158,7 @@ export default function About() {
             </div>
 
             {/* Value 3 */}
-            <div className="bg-warm-cream p-6 rounded-3xl shadow-lg hover:shadow-xl transition-shadow">
+            <div className={`bg-warm-cream ${SPACING.cardPadding} ${ROUNDED.xl} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base}`}>
               <div className="bg-primary-red p-4 rounded-2xl w-14 h-14 flex items-center justify-center mb-5">
                 <Leaf className="w-7 h-7 text-white" />
               </div>
@@ -168,7 +169,7 @@ export default function About() {
             </div>
 
             {/* Value 4 */}
-            <div className="bg-warm-cream p-6 rounded-3xl shadow-lg hover:shadow-xl transition-shadow">
+            <div className={`bg-warm-cream ${SPACING.cardPadding} ${ROUNDED.xl} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base}`}>
               <div className="bg-gray-500 p-4 rounded-2xl w-14 h-14 flex items-center justify-center mb-5">
                 <Users className="w-7 h-7 text-white" />
               </div>
@@ -193,9 +194,9 @@ export default function About() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className={`grid md:grid-cols-3 ${SPACING.cardGap}`}>
             {/* Team Member 1 */}
-            <div className="bg-white rounded-3xl p-6 shadow-lg hover:shadow-xl transition-shadow text-center">
+            <div className={`bg-white ${ROUNDED.xl} ${SPACING.cardPadding} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base} text-center`}>
               <div className="w-24 h-24 bg-primary-red rounded-full mx-auto mb-5 flex items-center justify-center">
                 <span className="text-5xl">👨‍🍳</span>
               </div>
@@ -207,7 +208,7 @@ export default function About() {
             </div>
 
             {/* Team Member 2 */}
-            <div className="bg-white rounded-3xl p-6 shadow-lg hover:shadow-xl transition-shadow text-center">
+            <div className={`bg-white ${ROUNDED.xl} ${SPACING.cardPadding} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base} text-center`}>
               <div className="w-24 h-24 bg-gray-500 rounded-full mx-auto mb-5 flex items-center justify-center">
                 <span className="text-5xl">👨‍🍳</span>
               </div>
@@ -219,7 +220,7 @@ export default function About() {
             </div>
 
             {/* Team Member 3 */}
-            <div className="bg-white rounded-3xl p-6 shadow-lg hover:shadow-xl transition-shadow text-center">
+            <div className={`bg-white ${ROUNDED.xl} ${SPACING.cardPadding} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base} text-center`}>
               <div className="w-24 h-24 bg-primary-red rounded-full mx-auto mb-5 flex items-center justify-center">
                 <span className="text-5xl">🚚</span>
               </div>

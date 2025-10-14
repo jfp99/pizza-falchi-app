@@ -3,8 +3,14 @@ import { connectDB } from '@/lib/mongodb';
 import Order from '@/models/Order';
 import Customer from '@/models/Customer';
 import { sendWhatsAppNotification } from '@/lib/whatsapp';
+import { readLimiter, orderLimiter } from '@/lib/rateLimiter';
+import { orderSchema } from '@/lib/validations/order';
 
 export async function GET(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResponse = await readLimiter(request);
+  if (rateLimitResponse) return rateLimitResponse;
+
   try {
     await connectDB();
 
@@ -28,58 +34,59 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  // Apply rate limiting for order creation
+  const rateLimitResponse = await orderLimiter(request);
+  if (rateLimitResponse) return rateLimitResponse;
+
   try {
     await connectDB();
 
     const body = await request.json();
 
-    // Validate required fields
-    if (!body.customerName || !body.phone || !body.items || body.items.length === 0) {
+    // Validate input with Zod
+    const validationResult = orderSchema.safeParse(body);
+
+    if (!validationResult.success) {
       return NextResponse.json(
-        { error: 'Informations manquantes' },
+        {
+          error: 'Données de commande invalides',
+          details: validationResult.error.flatten().fieldErrors,
+        },
         { status: 400 }
       );
     }
 
-    // Validate delivery address if delivery type is delivery
-    if (body.deliveryType === 'delivery') {
-      if (!body.deliveryAddress || !body.deliveryAddress.street || !body.deliveryAddress.city || !body.deliveryAddress.postalCode) {
-        return NextResponse.json(
-          { error: 'Adresse de livraison incomplète' },
-          { status: 400 }
-        );
-      }
-    }
+    const validatedData = validationResult.data;
 
     // Find or create customer
-    let customer = await Customer.findOne({ phone: body.phone });
+    let customer = await Customer.findOne({ phone: validatedData.phone });
 
     if (!customer) {
       // Create new customer
       customer = await Customer.create({
-        name: body.customerName,
-        email: body.email,
-        phone: body.phone,
-        address: body.deliveryAddress || {},
+        name: validatedData.customerName,
+        email: validatedData.email || '',
+        phone: validatedData.phone,
+        address: validatedData.deliveryAddress || {},
         totalOrders: 1,
-        totalSpent: body.total,
+        totalSpent: validatedData.total,
         lastOrderDate: new Date(),
       });
     } else {
       // Update existing customer stats
       customer.totalOrders += 1;
-      customer.totalSpent += body.total;
+      customer.totalSpent += validatedData.total;
       customer.lastOrderDate = new Date();
 
       // Update customer info if provided and different
-      if (body.customerName && body.customerName !== customer.name) {
-        customer.name = body.customerName;
+      if (validatedData.customerName && validatedData.customerName !== customer.name) {
+        customer.name = validatedData.customerName;
       }
-      if (body.email && body.email !== customer.email) {
-        customer.email = body.email;
+      if (validatedData.email && validatedData.email !== customer.email) {
+        customer.email = validatedData.email;
       }
-      if (body.deliveryAddress && body.deliveryType === 'delivery') {
-        customer.address = body.deliveryAddress;
+      if (validatedData.deliveryAddress && validatedData.deliveryType === 'delivery') {
+        customer.address = validatedData.deliveryAddress;
       }
 
       await customer.save();
@@ -87,25 +94,27 @@ export async function POST(request: NextRequest) {
 
     // Calculate estimated delivery time (30-45 minutes from now)
     const estimatedDelivery = new Date();
-    estimatedDelivery.setMinutes(estimatedDelivery.getMinutes() + (body.deliveryType === 'delivery' ? 45 : 30));
+    estimatedDelivery.setMinutes(
+      estimatedDelivery.getMinutes() + (validatedData.deliveryType === 'delivery' ? 45 : 30)
+    );
 
     // Create order
     const order = await Order.create({
-      customerName: body.customerName,
-      email: body.email,
-      phone: body.phone,
-      deliveryType: body.deliveryType,
-      deliveryAddress: body.deliveryAddress,
-      items: body.items,
-      subtotal: body.subtotal,
-      tax: body.tax,
-      deliveryFee: body.deliveryFee,
-      total: body.total,
-      paymentMethod: body.paymentMethod,
-      notes: body.notes,
+      customerName: validatedData.customerName,
+      email: validatedData.email || '',
+      phone: validatedData.phone,
+      deliveryType: validatedData.deliveryType,
+      deliveryAddress: validatedData.deliveryAddress,
+      items: validatedData.items,
+      subtotal: validatedData.subtotal,
+      tax: validatedData.tax,
+      deliveryFee: validatedData.deliveryFee,
+      total: validatedData.total,
+      paymentMethod: validatedData.paymentMethod,
+      notes: validatedData.notes || '',
       estimatedDelivery,
       status: 'pending',
-      paymentStatus: 'pending'
+      paymentStatus: 'pending',
     });
 
     // Populate product details

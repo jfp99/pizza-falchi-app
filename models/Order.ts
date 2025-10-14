@@ -56,4 +56,11 @@ const OrderSchema = new mongoose.Schema({
   notificationSentAt: { type: Date },
 }, { timestamps: true });
 
+// Add indexes for frequently queried fields
+OrderSchema.index({ status: 1, createdAt: -1 }); // For filtering orders by status and sorting by date
+OrderSchema.index({ phone: 1 }); // For customer lookup by phone
+OrderSchema.index({ customer: 1, createdAt: -1 }); // For customer order history
+OrderSchema.index({ orderId: 1 }); // For quick order ID lookup
+OrderSchema.index({ createdAt: -1 }); // For recent orders (already have timestamps, but explicit)
+
 export default mongoose.models.Order || mongoose.model('Order', OrderSchema);

@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
+import SkipLink from '@/components/layout/SkipLink';
 import AuthProvider from '@/components/providers/SessionProvider';
 import { CartProvider } from '@/contexts/CartContext';
 
@@ -96,9 +97,10 @@ export default function RootLayout({
       <body className={`${inter.variable} font-sans antialiased`}>
         <AuthProvider>
           <CartProvider>
+            <SkipLink />
             <div className="min-h-screen flex flex-col">
               <Navigation />
-              <main className="flex-1">
+              <main id="main-content" className="flex-1">
                 {children}
               </main>
               <Footer />

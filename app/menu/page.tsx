@@ -1,15 +1,17 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { Search, Filter, Star, Flame, Leaf, Gift } from 'lucide-react';
+import { Search, Filter, Star, Flame, Leaf, Gift, Pizza, ShoppingCart } from 'lucide-react';
 import { Product, Category } from '@/types';
 import { useCart } from '@/contexts/CartContext';
 import ProductCard from '@/components/menu/ProductCard';
+import ProductCardSkeleton from '@/components/menu/ProductCardSkeleton';
 import CartSidebar from '@/components/cart/CartSidebar';
 import CategoryFilter from '@/components/menu/CategoryFilter';
 import SpecialOfferBanner from '@/components/promotions/SpecialOfferBanner';
 import PackageCard from '@/components/packages/PackageCard';
 import ComboSelectionModal from '@/components/packages/ComboSelectionModal';
 import toast from 'react-hot-toast';
+import { SPACING, TYPOGRAPHY, ROUNDED, SHADOWS, TRANSITIONS } from '@/lib/design-constants';
 
 const categories: Category[] = [
   { id: 'all', name: 'Tout le Menu', icon: '🍕' },
@@ -45,6 +47,7 @@ export default function Menu() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isComboModalOpen, setIsComboModalOpen] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState<PackageType | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const { addItem, getTotalItems } = useCart();
 
   useEffect(() => {
@@ -53,6 +56,7 @@ export default function Menu() {
   }, []);
 
   const fetchProducts = async () => {
+    setIsLoading(true);
     try {
       const response = await fetch('/api/products');
       if (response.ok) {
@@ -63,6 +67,8 @@ export default function Menu() {
     } catch (error) {
       console.error('Error fetching products:', error);
       // Keep using mock data if API fails
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -112,7 +118,6 @@ export default function Menu() {
       `${product.name} ajouté au panier !`,
       {
         duration: 2000,
-        icon: '🍕',
         style: {
           background: '#FFF9F0',
           color: '#1a1a1a',
@@ -137,10 +142,9 @@ export default function Menu() {
     });
 
     toast.success(
-      `🎉 ${selectedPackage?.name} ajouté au panier pour ${totalPrice.toFixed(2)}€ !`,
+      `${selectedPackage?.name} ajouté au panier pour ${totalPrice.toFixed(2)}€ !`,
       {
         duration: 3000,
-        icon: '🎁',
         style: {
           background: '#FFF9F0',
           color: '#1a1a1a',
@@ -156,7 +160,7 @@ export default function Menu() {
   return (
     <div className="min-h-screen bg-warm-cream">
       {/* Hero Header - Enhanced with Gradient */}
-      <section className="relative bg-gradient-to-br from-charcoal via-gray-700 to-gray-900 py-20 md:py-28 mb-12 overflow-hidden">
+      <section className={`relative bg-gradient-to-br from-charcoal via-gray-700 to-gray-900 ${SPACING.sectionPadding} mb-12 overflow-hidden`}>
         {/* Animated Background Patterns */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-10 right-10 w-96 h-96 bg-primary-red/20 rounded-full blur-3xl animate-pulse" style={{animationDuration: '4s'}}></div>
@@ -210,7 +214,7 @@ export default function Menu() {
         <div className="mb-12 space-y-8">
           {/* Search Bar - Enhanced */}
           <div className="relative max-w-3xl mx-auto group">
-            <div className="absolute left-5 top-1/2 transform -translate-y-1/2 z-10">
+            <div className="absolute left-4 md:left-5 top-1/2 transform -translate-y-1/2 z-10 pointer-events-none">
               <div className="bg-gradient-to-br from-primary-red to-primary-yellow p-2 rounded-xl shadow-md group-focus-within:scale-110 transition-transform duration-300">
                 <Search className="w-5 h-5 text-white" />
               </div>
@@ -221,14 +225,14 @@ export default function Menu() {
               placeholder="Rechercher une pizza, un ingrédient..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-20 pr-14 py-5 bg-white border-2 border-gray-200 rounded-3xl focus:border-primary-red focus:shadow-xl hover:shadow-lg transition-all shadow-md text-lg font-medium text-charcoal placeholder:text-gray-400 placeholder:font-normal"
+              className="w-full pl-16 md:pl-20 pr-14 py-4 md:py-5 bg-white border-2 border-gray-200 rounded-3xl focus:border-primary-red focus:shadow-xl hover:shadow-lg transition-all shadow-md text-base md:text-lg font-medium text-charcoal placeholder:text-gray-400 placeholder:font-normal"
             />
             {searchTerm && (
               <button
                 suppressHydrationWarning
                 onClick={() => setSearchTerm('')}
-                className="absolute right-5 top-1/2 transform -translate-y-1/2 bg-gray-100 hover:bg-primary-red text-gray-600 hover:text-white p-2 rounded-xl transition-all duration-300 hover:scale-110"
-                aria-label="Clear search"
+                className="absolute right-4 md:right-5 top-1/2 transform -translate-y-1/2 bg-gray-100 hover:bg-primary-red text-gray-600 hover:text-white p-2 rounded-xl transition-all duration-300 hover:scale-110 focus:ring-2 focus:ring-primary-red focus:ring-offset-2"
+                aria-label="Effacer la recherche"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -247,7 +251,7 @@ export default function Menu() {
 
         {/* Product Count & Filters Summary - Enhanced */}
         {selectedCategory !== 'combo' && (
-          <div className="flex flex-col sm:flex-row justify-between items-center mb-10 bg-white rounded-2xl p-5 shadow-lg border-2 border-gray-100 hover:shadow-xl transition-all duration-300">
+          <div className={`flex flex-col sm:flex-row justify-between items-center mb-10 bg-white ${ROUNDED.lg} ${SPACING.cardPadding} ${SHADOWS.md} border-2 border-gray-100 hover:${SHADOWS.lg} ${TRANSITIONS.base}`}>
             <div className="flex items-center gap-4">
               <div className="bg-gradient-to-br from-primary-red to-primary-yellow p-3 rounded-xl shadow-md">
                 <Filter className="w-5 h-5 text-white" />
@@ -278,14 +282,22 @@ export default function Menu() {
 
         {/* Grille des produits */}
         {selectedCategory !== 'combo' && (
-          <div id="products-section" className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            {filteredProducts.map(product => (
-              <ProductCard
-                key={product._id}
-                product={product}
-                onAddToCart={handleAddToCart}
-              />
-            ))}
+          <div id="products-section" className={`grid md:grid-cols-2 lg:grid-cols-3 ${SPACING.cardGap} mb-12`}>
+            {isLoading ? (
+              // Show skeleton loaders while loading
+              Array.from({ length: 6 }).map((_, index) => (
+                <ProductCardSkeleton key={`skeleton-${index}`} />
+              ))
+            ) : (
+              // Show actual products when loaded
+              filteredProducts.map(product => (
+                <ProductCard
+                  key={product._id}
+                  product={product}
+                  onAddToCart={handleAddToCart}
+                />
+              ))
+            )}
           </div>
         )}
 
@@ -321,7 +333,7 @@ export default function Menu() {
             )}
 
             {/* Packages Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className={`grid md:grid-cols-2 lg:grid-cols-3 ${SPACING.cardGap}`}>
               {packages.map((pkg) => (
                 <PackageCard
                   key={pkg._id}
@@ -334,11 +346,11 @@ export default function Menu() {
         )}
 
         {/* Message si aucun résultat - Enhanced */}
-        {filteredProducts.length === 0 && selectedCategory !== 'combo' && (
+        {!isLoading && filteredProducts.length === 0 && selectedCategory !== 'combo' && (
           <div className="text-center py-20">
             <div className="bg-white rounded-3xl p-12 max-w-lg mx-auto shadow-2xl border-2 border-gray-100 hover:shadow-3xl transition-all duration-300">
               <div className="inline-block bg-soft-red-lighter rounded-3xl p-6 mb-6">
-                <div className="text-7xl">🍕</div>
+                <Pizza className="w-16 h-16 text-primary-red" />
               </div>
               <h3 className="text-3xl md:text-4xl font-black text-charcoal mb-4">Aucun résultat trouvé</h3>
               <p className="text-lg text-gray-600 mb-8 leading-relaxed">
@@ -370,13 +382,13 @@ export default function Menu() {
         <button
           suppressHydrationWarning
           onClick={() => setIsCartOpen(true)}
-          className="fixed bottom-6 right-6 bg-gradient-to-br from-primary-red to-primary-yellow hover:from-primary-yellow hover:to-primary-red text-white p-5 rounded-full shadow-2xl md:hidden z-40 transition-all duration-300 transform hover:scale-110 active:scale-95"
+          className="fixed bottom-4 right-4 md:bottom-6 md:right-6 bg-gradient-to-br from-primary-red to-primary-yellow hover:from-primary-yellow hover:to-primary-red text-white p-4 md:p-5 rounded-full shadow-2xl md:hidden z-50 transition-all duration-300 transform hover:scale-110 active:scale-95"
           aria-label={`Ouvrir le panier ${getTotalItems() > 0 ? `(${getTotalItems()} article${getTotalItems() > 1 ? 's' : ''})` : '(vide)'}`}
         >
           <div className="relative">
-            <span className="text-2xl drop-shadow-lg">🛒</span>
+            <ShoppingCart className="w-6 h-6" />
             {getTotalItems() > 0 && (
-              <span className="absolute -top-3 -right-3 bg-white text-primary-red rounded-full w-7 h-7 text-sm flex items-center justify-center font-black shadow-xl border-2 border-primary-red animate-pulse">
+              <span className="absolute -top-2 -right-2 bg-white text-primary-red rounded-full w-6 h-6 text-xs flex items-center justify-center font-black shadow-xl border-2 border-primary-red animate-pulse">
                 {getTotalItems()}
               </span>
             )}

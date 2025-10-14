@@ -4,6 +4,7 @@ import { ArrowLeft, ShoppingCart, Trash2, Plus, Minus, Clock, Truck, Shield } fr
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import { SPACING, ROUNDED, SHADOWS, TRANSITIONS } from '@/lib/design-constants';
 
 export default function CartPage() {
   const router = useRouter();
@@ -76,13 +77,13 @@ export default function CartPage() {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className={`grid lg:grid-cols-3 ${SPACING.cardGap}`}>
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-4">
             {items.map((item, index) => (
               <div
                 key={index}
-                className="group bg-white rounded-3xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100"
+                className={`group bg-white ${ROUNDED.xl} ${SPACING.cardPadding} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base} transform hover:-translate-y-1 border border-gray-100`}
               >
                 <div className="flex gap-6">
                   {/* Product Image */}

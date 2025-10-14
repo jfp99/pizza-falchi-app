@@ -1,11 +1,63 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Pizza, Truck, Clock, Star, ChefHat, Award, Heart, MapPin } from 'lucide-react';
+import { Pizza, Truck, Clock, Star, ChefHat, Award, Heart, MapPin, Timer, Flame } from 'lucide-react';
 import SpecialOfferBanner from '@/components/promotions/SpecialOfferBanner';
+import StructuredData from '@/components/seo/StructuredData';
+import { SPACING, ROUNDED, SHADOWS, TRANSITIONS } from '@/lib/design-constants';
 
 export default function Home() {
+  // Organization and LocalBusiness structured data for SEO
+  const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Restaurant',
+    '@id': 'https://www.pizzafalchi.com/#restaurant',
+    name: 'Pizza Falchi',
+    image: 'https://www.pizzafalchi.com/images/logo-pizzafalchi.jpg',
+    description: 'Restaurant de pizzas artisanales à Ajaccio. Pizzas au feu de bois préparées avec des ingrédients frais et authentiques. Food truck moderne proposant des recettes italiennes traditionnelles.',
+    url: 'https://www.pizzafalchi.com',
+    telephone: '+33442920308',
+    priceRange: '€€',
+    servesCuisine: ['Italian', 'Pizza'],
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'Ajaccio',
+      addressLocality: 'Ajaccio',
+      addressRegion: 'Corse',
+      postalCode: '20000',
+      addressCountry: 'FR',
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: 41.9267,
+      longitude: 8.7369,
+    },
+    openingHoursSpecification: [
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        opens: '18:00',
+        closes: '21:30',
+      },
+    ],
+    acceptsReservations: 'True',
+    menu: 'https://www.pizzafalchi.com/menu',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.9',
+      reviewCount: '150',
+      bestRating: '5',
+      worstRating: '1',
+    },
+    sameAs: [
+      'https://www.facebook.com/pizzafalchi',
+      'https://www.instagram.com/pizzafalchi',
+    ],
+  };
+
   return (
-    <div className="min-h-screen bg-warm-cream">
+    <>
+      <StructuredData data={organizationSchema} />
+      <div className="min-h-screen bg-warm-cream">
       {/* Hero Section - Clean & Impactful */}
       <section className="relative min-h-screen flex items-center bg-warm-cream overflow-hidden">
         {/* Large Hero Image */}
@@ -29,7 +81,7 @@ export default function Home() {
               </span>
             </div>
 
-            <h1 className="text-6xl md:text-8xl font-black mb-8 text-white leading-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black mb-8 text-white leading-tight">
               Des pizzas
               <span className="block text-primary-yellow">
                 qui voyagent
@@ -101,9 +153,9 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className={`grid md:grid-cols-2 lg:grid-cols-4 ${SPACING.cardGap}`}>
             {/* Feature Card 1 */}
-            <div className="bg-white p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group border border-gray-100">
+            <div className={`bg-white ${SPACING.cardPadding} ${ROUNDED.xl} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base} hover:-translate-y-2 group border border-gray-100`}>
               <div className="bg-white p-5 rounded-2xl w-16 h-16 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-md">
                 <Award className="w-8 h-8 text-gray-600 group-hover:text-primary-red transition-colors duration-300" />
               </div>
@@ -114,7 +166,7 @@ export default function Home() {
             </div>
 
             {/* Feature Card 2 */}
-            <div className="bg-white p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group border border-gray-100">
+            <div className={`bg-white ${SPACING.cardPadding} ${ROUNDED.xl} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base} hover:-translate-y-2 group border border-gray-100`}>
               <div className="bg-white p-5 rounded-2xl w-16 h-16 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-md">
                 <Clock className="w-8 h-8 text-gray-600 group-hover:text-primary-yellow transition-colors duration-300" />
               </div>
@@ -125,7 +177,7 @@ export default function Home() {
             </div>
 
             {/* Feature Card 3 */}
-            <div className="bg-white p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group border border-gray-100">
+            <div className={`bg-white ${SPACING.cardPadding} ${ROUNDED.xl} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base} hover:-translate-y-2 group border border-gray-100`}>
               <div className="bg-white p-5 rounded-2xl w-16 h-16 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-md">
                 <Star className="w-8 h-8 text-gray-600 group-hover:text-basil-light transition-colors duration-300" />
               </div>
@@ -136,7 +188,7 @@ export default function Home() {
             </div>
 
             {/* Feature Card 4 */}
-            <div className="bg-white p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group border border-gray-100">
+            <div className={`bg-white ${SPACING.cardPadding} ${ROUNDED.xl} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base} hover:-translate-y-2 group border border-gray-100`}>
               <div className="bg-white p-5 rounded-2xl w-16 h-16 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-md">
                 <ChefHat className="w-8 h-8 text-gray-600 group-hover:text-primary-red transition-colors duration-300" />
               </div>
@@ -185,20 +237,20 @@ export default function Home() {
               {/* Clean features */}
               <div className="space-y-4 mb-10">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-soft-red-lighter rounded-xl flex items-center justify-center text-2xl">
-                    🇮🇹
+                  <div className="w-12 h-12 bg-soft-red-lighter rounded-xl flex items-center justify-center">
+                    <Award className="w-6 h-6 text-primary-red" />
                   </div>
                   <p className="text-lg font-semibold text-charcoal">Recettes napolitaines authentiques</p>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-soft-yellow-lighter rounded-xl flex items-center justify-center text-2xl">
-                    ⏱️
+                  <div className="w-12 h-12 bg-soft-yellow-lighter rounded-xl flex items-center justify-center">
+                    <Timer className="w-6 h-6 text-primary-yellow" />
                   </div>
                   <p className="text-lg font-semibold text-charcoal">Pâte fermentée 48h</p>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-soft-red-lighter rounded-xl flex items-center justify-center text-2xl">
-                    🔥
+                  <div className="w-12 h-12 bg-soft-red-lighter rounded-xl flex items-center justify-center">
+                    <Flame className="w-6 h-6 text-primary-red" />
                   </div>
                   <p className="text-lg font-semibold text-charcoal">Cuisson au feu de bois</p>
                 </div>
@@ -264,7 +316,10 @@ export default function Home() {
               <div className="text-white/80 text-sm">Recettes Artisanales</div>
             </div>
             <div className="backdrop-blur-sm bg-white/10 rounded-2xl px-6 py-4 border border-white/20 shadow-lg">
-              <div className="text-3xl font-black text-primary-yellow mb-1">⭐ 4.9</div>
+              <div className="text-3xl font-black text-primary-yellow mb-1 flex items-center justify-center gap-2">
+                <Star className="w-6 h-6 fill-current" />
+                4.9
+              </div>
               <div className="text-white/80 text-sm">Note Moyenne</div>
             </div>
             <div className="backdrop-blur-sm bg-white/10 rounded-2xl px-6 py-4 border border-white/20 shadow-lg">
@@ -280,5 +335,6 @@ export default function Home() {
         }}></div>
       </section>
     </div>
+    </>
   );
 }
