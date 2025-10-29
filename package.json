@@ -14,7 +14,9 @@
     "seed:admin": "tsx scripts/seedAdmin.ts",
     "seed:atlas": "tsx scripts/seedAtlas.ts",
     "seed:atlas:force": "tsx scripts/seedAtlas.ts --force",
-    "seed:packages": "tsx scripts/seedPackages.ts"
+    "seed:packages": "tsx scripts/seedPackages.ts",
+    "seed:opening-hours": "tsx scripts/seedOpeningHours.ts",
+    "seed:opening-hours:force": "tsx scripts/seedOpeningHours.ts --force"
   },
   "dependencies": {
     "@stripe/react-stripe-js": "^5.2.0",
@@ -23,6 +25,7 @@
     "@vercel/speed-insights": "^1.2.0",
     "bcryptjs": "^3.0.2",
     "dotenv": "^17.2.3",
+    "framer-motion": "^12.23.24",
     "lucide-react": "^0.460.0",
     "mongoose": "^8.0.0",
     "next": "15.5.4",

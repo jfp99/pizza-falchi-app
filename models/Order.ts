@@ -54,6 +54,16 @@ const OrderSchema = new mongoose.Schema({
   estimatedDelivery: Date,
   notificationSent: { type: Boolean, default: false },
   notificationSentAt: { type: Date },
+  // Time Slot Management
+  timeSlot: { type: mongoose.Schema.Types.ObjectId, ref: 'TimeSlot' },
+  scheduledTime: { type: Date },
+  pickupTimeRange: { type: String },
+  assignedBy: {
+    type: String,
+    enum: ['customer', 'cashier', 'system'],
+    default: 'customer'
+  },
+  isManualAssignment: { type: Boolean, default: false },
 }, { timestamps: true });
 
 // Add indexes for frequently queried fields
@@ -62,5 +72,7 @@ OrderSchema.index({ phone: 1 }); // For customer lookup by phone
 OrderSchema.index({ customer: 1, createdAt: -1 }); // For customer order history
 OrderSchema.index({ orderId: 1 }); // For quick order ID lookup
 OrderSchema.index({ createdAt: -1 }); // For recent orders (already have timestamps, but explicit)
+OrderSchema.index({ timeSlot: 1 }); // For time slot management queries
+OrderSchema.index({ scheduledTime: 1 }); // For querying orders by scheduled time
 
 export default mongoose.models.Order || mongoose.model('Order', OrderSchema);

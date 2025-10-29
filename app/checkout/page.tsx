@@ -2,13 +2,16 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/contexts/CartContext';
-import { Package, Truck, User, Phone, Mail, MapPin, CreditCard, FileText, ShoppingBag, ArrowLeft, Check, Loader2, Banknote, Globe } from 'lucide-react';
+import { Package, Truck, User, Phone, Mail, MapPin, CreditCard, FileText, ShoppingBag, ArrowLeft, Check, Loader2, Banknote, Globe, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import StripePaymentForm from '@/components/checkout/StripePaymentForm';
+import TimeSlotSelector from '@/components/checkout/TimeSlotSelector';
 import toast from 'react-hot-toast';
 import { SPACING, ROUNDED, SHADOWS, TRANSITIONS } from '@/lib/design-constants';
+import { checkoutAnalytics } from '@/lib/analytics';
+import type { TimeSlot } from '@/types';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
 
@@ -21,6 +24,7 @@ export default function Checkout() {
 
   // Form state
   const [deliveryType, setDeliveryType] = useState<'pickup' | 'delivery'>('pickup');
+  const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
   const [formData, setFormData] = useState({
     customerName: '',
     email: '',
@@ -38,6 +42,9 @@ export default function Checkout() {
   useEffect(() => {
     if (items.length === 0) {
       router.push('/menu');
+    } else {
+      // Track begin checkout
+      checkoutAnalytics.beginCheckout(getTotal(), items.length);
     }
   }, [items, router]);
 
@@ -83,6 +90,12 @@ export default function Checkout() {
     }
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Email invalide';
+    }
+
+    // Time slot required for pickup orders
+    if (deliveryType === 'pickup' && !selectedSlot) {
+      newErrors.timeSlot = 'Veuillez sélectionner un créneau horaire';
+      toast.error('Veuillez sélectionner un créneau horaire');
     }
 
     if (deliveryType === 'delivery') {
@@ -139,7 +152,13 @@ export default function Checkout() {
         total,
         paymentMethod: formData.paymentMethod,
         paymentIntentId,
-        notes: formData.notes
+        notes: formData.notes,
+        // Time slot information
+        timeSlot: selectedSlot?._id,
+        scheduledTime: selectedSlot ? new Date(selectedSlot.date) : undefined,
+        pickupTimeRange: selectedSlot ? `${selectedSlot.startTime} - ${selectedSlot.endTime}` : undefined,
+        assignedBy: 'customer' as const,
+        isManualAssignment: false
       };
 
       const response = await fetch('/api/orders', {
@@ -155,6 +174,9 @@ export default function Checkout() {
       }
 
       const order = await response.json();
+
+      // Track purchase completion
+      checkoutAnalytics.purchase(order._id, total, items.length);
 
       // Clear cart
       clearCart();
@@ -187,6 +209,8 @@ export default function Checkout() {
     if (method !== 'online') {
       setClientSecret(null);
     }
+    // Track payment method selection
+    checkoutAnalytics.addPaymentInfo(method);
   };
 
   if (items.length === 0) {
@@ -263,6 +287,14 @@ export default function Checkout() {
               </div>
             </div>
 
+            {/* Time Slot Selection (only for pickup) */}
+            {deliveryType === 'pickup' && (
+              <TimeSlotSelector
+                onSlotSelect={setSelectedSlot}
+                selectedSlot={selectedSlot}
+              />
+            )}
+
             {/* Customer Information */}
             <div className={`bg-white ${ROUNDED.xl} ${SPACING.cardPaddingLg} ${SHADOWS.md} border border-gray-100`}>
               <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
@@ -282,13 +314,16 @@ export default function Checkout() {
                     value={formData.customerName}
                     onChange={handleInputChange}
                     className={`w-full px-4 py-3 rounded-xl border-2 ${
-                      errors.customerName ? 'border-red-300 bg-red-50' : 'border-gray-200'
+                      errors.customerName ? 'border-red-500 bg-red-50 focus:ring-red-500 focus:border-red-500' : 'border-gray-200'
                     } focus:ring-2 focus:ring-primary-red focus:border-primary-red transition`}
                     placeholder="Jean Dupont"
+                    aria-invalid={!!errors.customerName}
+                    aria-describedby={errors.customerName ? 'customerName-error' : undefined}
                   />
                   {errors.customerName && (
-                    <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                      <span>⚠️</span> {errors.customerName}
+                    <p id="customerName-error" className="mt-2 text-sm text-red-600 flex items-center gap-2 bg-red-50 p-2 rounded-lg border border-red-200">
+                      <AlertCircle className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+                      <span>{errors.customerName}</span>
                     </p>
                   )}
                 </div>
@@ -304,13 +339,16 @@ export default function Checkout() {
                       value={formData.phone}
                       onChange={handleInputChange}
                       className={`w-full px-4 py-3 rounded-xl border-2 ${
-                        errors.phone ? 'border-red-300 bg-red-50' : 'border-gray-200'
+                        errors.phone ? 'border-red-500 bg-red-50 focus:ring-red-500 focus:border-red-500' : 'border-gray-200'
                       } focus:ring-2 focus:ring-primary-red focus:border-primary-red transition`}
                       placeholder="06 12 34 56 78"
+                      aria-invalid={!!errors.phone}
+                      aria-describedby={errors.phone ? 'phone-error' : undefined}
                     />
                     {errors.phone && (
-                      <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                        <span>⚠️</span> {errors.phone}
+                      <p id="phone-error" className="mt-2 text-sm text-red-600 flex items-center gap-2 bg-red-50 p-2 rounded-lg border border-red-200">
+                        <AlertCircle className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+                        <span>{errors.phone}</span>
                       </p>
                     )}
                   </div>
@@ -325,13 +363,16 @@ export default function Checkout() {
                       value={formData.email}
                       onChange={handleInputChange}
                       className={`w-full px-4 py-3 rounded-xl border-2 ${
-                        errors.email ? 'border-red-300 bg-red-50' : 'border-gray-200'
+                        errors.email ? 'border-red-500 bg-red-50 focus:ring-red-500 focus:border-red-500' : 'border-gray-200'
                       } focus:ring-2 focus:ring-primary-red focus:border-primary-red transition`}
                       placeholder="jean.dupont@email.com"
+                      aria-invalid={!!errors.email}
+                      aria-describedby={errors.email ? 'email-error' : undefined}
                     />
                     {errors.email && (
-                      <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                        <span>⚠️</span> {errors.email}
+                      <p id="email-error" className="mt-2 text-sm text-red-600 flex items-center gap-2 bg-red-50 p-2 rounded-lg border border-red-200">
+                        <AlertCircle className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+                        <span>{errors.email}</span>
                       </p>
                     )}
                   </div>
@@ -359,13 +400,16 @@ export default function Checkout() {
                       value={formData.street}
                       onChange={handleInputChange}
                       className={`w-full px-4 py-3 rounded-xl border-2 ${
-                        errors.street ? 'border-red-300 bg-red-50' : 'border-gray-200'
+                        errors.street ? 'border-red-500 bg-red-50 focus:ring-red-500 focus:border-red-500' : 'border-gray-200'
                       } focus:ring-2 focus:ring-primary-red focus:border-primary-red transition`}
                       placeholder="123 Rue de la Pizza"
+                      aria-invalid={!!errors.street}
+                      aria-describedby={errors.street ? 'street-error' : undefined}
                     />
                     {errors.street && (
-                      <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                        <span>⚠️</span> {errors.street}
+                      <p id="street-error" className="mt-2 text-sm text-red-600 flex items-center gap-2 bg-red-50 p-2 rounded-lg border border-red-200">
+                        <AlertCircle className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+                        <span>{errors.street}</span>
                       </p>
                     )}
                   </div>
@@ -381,13 +425,16 @@ export default function Checkout() {
                         value={formData.postalCode}
                         onChange={handleInputChange}
                         className={`w-full px-4 py-3 rounded-xl border-2 ${
-                          errors.postalCode ? 'border-red-300 bg-red-50' : 'border-gray-200'
+                          errors.postalCode ? 'border-red-500 bg-red-50 focus:ring-red-500 focus:border-red-500' : 'border-gray-200'
                         } focus:ring-2 focus:ring-primary-red focus:border-primary-red transition`}
                         placeholder="13000"
+                        aria-invalid={!!errors.postalCode}
+                        aria-describedby={errors.postalCode ? 'postalCode-error' : undefined}
                       />
                       {errors.postalCode && (
-                        <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                          <span>⚠️</span> {errors.postalCode}
+                        <p id="postalCode-error" className="mt-2 text-sm text-red-600 flex items-center gap-2 bg-red-50 p-2 rounded-lg border border-red-200">
+                          <AlertCircle className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+                          <span>{errors.postalCode}</span>
                         </p>
                       )}
                     </div>
@@ -402,13 +449,16 @@ export default function Checkout() {
                         value={formData.city}
                         onChange={handleInputChange}
                         className={`w-full px-4 py-3 rounded-xl border-2 ${
-                          errors.city ? 'border-red-300 bg-red-50' : 'border-gray-200'
+                          errors.city ? 'border-red-500 bg-red-50 focus:ring-red-500 focus:border-red-500' : 'border-gray-200'
                         } focus:ring-2 focus:ring-primary-red focus:border-primary-red transition`}
                         placeholder="Aix-en-Provence"
+                        aria-invalid={!!errors.city}
+                        aria-describedby={errors.city ? 'city-error' : undefined}
                       />
                       {errors.city && (
-                        <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                          <span>⚠️</span> {errors.city}
+                        <p id="city-error" className="mt-2 text-sm text-red-600 flex items-center gap-2 bg-red-50 p-2 rounded-lg border border-red-200">
+                          <AlertCircle className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+                          <span>{errors.city}</span>
                         </p>
                       )}
                     </div>

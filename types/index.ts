@@ -66,6 +66,71 @@ export interface Order {
   customerName: string;
   notes?: string;
   estimatedDelivery?: Date;
+  timeSlot?: string; // Reference to TimeSlot
+  scheduledTime?: Date;
+  pickupTimeRange?: string;
+  assignedBy?: 'customer' | 'cashier' | 'system';
+  isManualAssignment?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export interface TimeRange {
+  open: string; // Format: "HH:MM"
+  close: string; // Format: "HH:MM"
+}
+
+export interface Exception {
+  date: Date;
+  isClosed: boolean;
+  reason?: string;
+  customHours?: TimeRange;
+}
+
+export interface TimeSlot {
+  _id?: string;
+  date: Date;
+  startTime: string; // Format: "HH:MM"
+  endTime: string; // Format: "HH:MM"
+  capacity: number;
+  currentOrders: number;
+  orders: string[]; // Array of Order IDs
+  isAvailable: boolean;
+  status: 'active' | 'full' | 'closed';
+  timeRange?: string; // Virtual property
+  remainingCapacity?: number; // Virtual property
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface OpeningHours {
+  _id?: string;
+  dayOfWeek: number; // 0-6 (0 = Sunday, 6 = Saturday)
+  isOpen: boolean;
+  hours?: TimeRange;
+  exceptions: Exception[];
+  slotDuration: number; // Duration in minutes (default: 10)
+  ordersPerSlot: number; // Orders per slot (default: 2)
+  dayName?: string; // Virtual property
+  hoursDisplay?: string; // Virtual property
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface TimeSlotStatistics {
+  totalSlots: number;
+  availableSlots: number;
+  fullSlots: number;
+  totalOrders: number;
+  averageOrdersPerSlot: number;
+  utilizationRate: number;
+}
+
+export interface TimeSlotResponse {
+  success: boolean;
+  slots?: TimeSlot[];
+  slot?: TimeSlot;
+  count?: number;
+  message?: string;
+  error?: string;
 }

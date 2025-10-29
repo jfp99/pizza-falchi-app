@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import Order from '@/models/Order';
 import Customer from '@/models/Customer';
+import TimeSlot from '@/models/TimeSlot';
 import { sendWhatsAppNotification } from '@/lib/whatsapp';
 import { readLimiter, orderLimiter } from '@/lib/rateLimiter';
 import { orderSchema } from '@/lib/validations/order';
@@ -20,6 +21,7 @@ export async function GET(request: NextRequest) {
     const query = status ? { status } : {};
     const orders = await Order.find(query)
       .populate('items.product')
+      .populate('timeSlot')
       .sort({ createdAt: -1 })
       .limit(100);
 
@@ -98,7 +100,7 @@ export async function POST(request: NextRequest) {
       estimatedDelivery.getMinutes() + (validatedData.deliveryType === 'delivery' ? 45 : 30)
     );
 
-    // Create order
+    // Create order with time slot information
     const order = await Order.create({
       customerName: validatedData.customerName,
       email: validatedData.email || '',
@@ -115,10 +117,31 @@ export async function POST(request: NextRequest) {
       estimatedDelivery,
       status: 'pending',
       paymentStatus: 'pending',
+      // Time slot fields
+      timeSlot: validatedData.timeSlot,
+      scheduledTime: validatedData.scheduledTime,
+      pickupTimeRange: validatedData.pickupTimeRange,
+      assignedBy: validatedData.assignedBy || 'customer',
+      isManualAssignment: validatedData.isManualAssignment || false,
     });
 
-    // Populate product details
-    const populatedOrder = await Order.findById(order._id).populate('items.product');
+    // Add order to time slot if selected
+    if (validatedData.timeSlot) {
+      try {
+        const timeSlot = await TimeSlot.findById(validatedData.timeSlot);
+        if (timeSlot) {
+          await timeSlot.addOrder(order._id);
+        }
+      } catch (slotError) {
+        console.error('Error adding order to time slot:', slotError);
+        // Continue with order creation even if slot assignment fails
+      }
+    }
+
+    // Populate product details and time slot
+    const populatedOrder = await Order.findById(order._id)
+      .populate('items.product')
+      .populate('timeSlot');
 
     // Send WhatsApp notification
     try {

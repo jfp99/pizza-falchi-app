@@ -229,8 +229,32 @@ export default function AdminOrders() {
                     </div>
                   )}
 
-                  {/* Estimated Time */}
-                  {order.estimatedDelivery && (
+                  {/* Time Slot Info */}
+                  {order.timeSlot && order.pickupTimeRange && (
+                    <div>
+                      <h4 className="font-bold text-charcoal mb-4 flex items-center gap-2">
+                        <Clock className="w-5 h-5 text-primary-red" /> Créneau de récupération
+                      </h4>
+                      <div className="space-y-2">
+                        <p className="text-gray-700 font-semibold">
+                          {order.scheduledTime && new Date(order.scheduledTime).toLocaleDateString('fr-FR', {
+                            weekday: 'long',
+                            day: 'numeric',
+                            month: 'long'
+                          })}
+                        </p>
+                        <p className="text-2xl font-black text-primary-red">
+                          {order.pickupTimeRange}
+                        </p>
+                        <p className="text-xs text-gray-500 capitalize">
+                          Assigné par: {order.assignedBy === 'customer' ? 'Client' : order.assignedBy === 'cashier' ? 'Caissier' : 'Système'}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Estimated Time (fallback if no time slot) */}
+                  {!order.timeSlot && order.estimatedDelivery && (
                     <div>
                       <h4 className="font-bold text-charcoal mb-4 flex items-center gap-2">
                         <Clock className="w-5 h-5 text-primary-red" /> Heure estimée
