@@ -16,6 +16,10 @@ export interface ITimeSlot extends Document {
   createdAt: Date;
   updatedAt: Date;
 
+  // Virtual properties
+  timeRange: string; // Full time range as string (e.g., "18:00 - 18:10")
+  remainingCapacity: number; // Remaining capacity
+
   // Instance methods
   canAcceptOrder(): boolean;
   addOrder(orderId: mongoose.Types.ObjectId | string): Promise<ITimeSlot>;
