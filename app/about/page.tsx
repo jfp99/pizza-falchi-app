@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Heart, Users, Award, Star, Leaf } from 'lucide-react';
+import { Heart, Users, Award, Star, Leaf, Flame, Phone } from 'lucide-react';
 import { ChefIcon, TruckIcon } from '@/components/icons/CategoryIcons';
 import SpecialOfferBanner from '@/components/promotions/SpecialOfferBanner';
 import type { Metadata } from 'next';
