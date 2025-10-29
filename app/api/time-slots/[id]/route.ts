@@ -16,12 +16,13 @@ import { assignOrderToSlot, removeOrderFromSlot } from '@/lib/timeSlots';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
+    const { id } = await params;
 
-    const slot = await TimeSlot.findById(params.id).populate('orders');
+    const slot = await TimeSlot.findById(id).populate('orders');
 
     if (!slot) {
       return NextResponse.json(
@@ -35,7 +36,7 @@ export async function GET(
       slot,
     });
   } catch (error) {
-    console.error(`GET /api/time-slots/${params.id} error:`, error);
+    console.error(`GET /api/time-slots/[id] error:`, error);
     return NextResponse.json(
       {
         error: 'Failed to fetch time slot',
@@ -56,10 +57,11 @@ export async function GET(
  */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
+    const { id } = await params;
 
     const body = await request.json();
     const { action, orderId, status } = body;
@@ -71,7 +73,7 @@ export async function PUT(
       );
     }
 
-    const slot = await TimeSlot.findById(params.id);
+    const slot = await TimeSlot.findById(id);
 
     if (!slot) {
       return NextResponse.json(
@@ -94,7 +96,7 @@ export async function PUT(
         return NextResponse.json({
           success: true,
           message: 'Order added to time slot',
-          slot: await TimeSlot.findById(params.id).populate('orders'),
+          slot: await TimeSlot.findById(id).populate('orders'),
         });
 
       case 'removeOrder':
@@ -110,7 +112,7 @@ export async function PUT(
         return NextResponse.json({
           success: true,
           message: 'Order removed from time slot',
-          slot: await TimeSlot.findById(params.id).populate('orders'),
+          slot: await TimeSlot.findById(id).populate('orders'),
         });
 
       case 'updateStatus':
@@ -134,7 +136,7 @@ export async function PUT(
         return NextResponse.json({
           success: true,
           message: 'Time slot status updated',
-          slot: await TimeSlot.findById(params.id).populate('orders'),
+          slot: await TimeSlot.findById(id).populate('orders'),
         });
 
       default:
@@ -144,7 +146,7 @@ export async function PUT(
         );
     }
   } catch (error) {
-    console.error(`PUT /api/time-slots/${params.id} error:`, error);
+    console.error(`PUT /api/time-slots/[id] error:`, error);
     return NextResponse.json(
       {
         error: 'Failed to update time slot',
@@ -161,12 +163,13 @@ export async function PUT(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
+    const { id } = await params;
 
-    const slot = await TimeSlot.findById(params.id);
+    const slot = await TimeSlot.findById(id);
 
     if (!slot) {
       return NextResponse.json(
@@ -186,14 +189,14 @@ export async function DELETE(
       );
     }
 
-    await TimeSlot.findByIdAndDelete(params.id);
+    await TimeSlot.findByIdAndDelete(id);
 
     return NextResponse.json({
       success: true,
       message: 'Time slot deleted successfully',
     });
   } catch (error) {
-    console.error(`DELETE /api/time-slots/${params.id} error:`, error);
+    console.error(`DELETE /api/time-slots/[id] error:`, error);
     return NextResponse.json(
       {
         error: 'Failed to delete time slot',
