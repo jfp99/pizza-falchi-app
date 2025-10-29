@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Heart, Users, Award, Clock, MapPin, Phone, Mail, ChefHat, Flame, Leaf } from 'lucide-react';
+import { Heart, Users, Award, Star, Leaf } from 'lucide-react';
+import { ChefIcon, TruckIcon } from '@/components/icons/CategoryIcons';
 import SpecialOfferBanner from '@/components/promotions/SpecialOfferBanner';
 import type { Metadata } from 'next';
 import { SPACING, ROUNDED, SHADOWS, TRANSITIONS } from '@/lib/design-constants';
@@ -198,7 +199,7 @@ export default function About() {
             {/* Team Member 1 */}
             <div className={`bg-white ${ROUNDED.xl} ${SPACING.cardPadding} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base} text-center`}>
               <div className="w-24 h-24 bg-primary-red rounded-full mx-auto mb-5 flex items-center justify-center">
-                <span className="text-5xl">👨‍🍳</span>
+                <ChefIcon size={48} className="text-white" aria-hidden="true" />
               </div>
               <h3 className="text-xl font-bold text-charcoal mb-2">Marco Falchi</h3>
               <p className="text-primary-red font-semibold mb-3 text-sm">Chef Pizzaiolo</p>
@@ -210,7 +211,7 @@ export default function About() {
             {/* Team Member 2 */}
             <div className={`bg-white ${ROUNDED.xl} ${SPACING.cardPadding} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base} text-center`}>
               <div className="w-24 h-24 bg-gray-500 rounded-full mx-auto mb-5 flex items-center justify-center">
-                <span className="text-5xl">👨‍🍳</span>
+                <ChefIcon size={48} className="text-white" aria-hidden="true" />
               </div>
               <h3 className="text-xl font-bold text-charcoal mb-2">Mickael Pruvost</h3>
               <p className="text-gray-600 font-semibold mb-3 text-sm">Gérant</p>
@@ -222,7 +223,7 @@ export default function About() {
             {/* Team Member 3 */}
             <div className={`bg-white ${ROUNDED.xl} ${SPACING.cardPadding} ${SHADOWS.md} hover:${SHADOWS.lg} ${TRANSITIONS.base} text-center`}>
               <div className="w-24 h-24 bg-primary-red rounded-full mx-auto mb-5 flex items-center justify-center">
-                <span className="text-5xl">🚚</span>
+                <TruckIcon size={48} className="text-white" aria-hidden="true" />
               </div>
               <h3 className="text-xl font-bold text-charcoal mb-2">Luca Bianchi</h3>
               <p className="text-primary-red font-semibold mb-3 text-sm">Manager</p>
@@ -264,7 +265,10 @@ export default function About() {
               <div className="text-white/90 font-medium text-sm md:text-base">Pizzas Servies</div>
             </div>
             <div className="backdrop-blur-sm bg-white/10 rounded-3xl p-6 md:p-8 border border-white/20 shadow-xl hover:bg-white/15 transition-all duration-300 hover:scale-105">
-              <div className="text-4xl md:text-5xl font-black text-primary-yellow mb-2 drop-shadow-lg">⭐ 4.9</div>
+              <div className="text-4xl md:text-5xl font-black text-primary-yellow mb-2 drop-shadow-lg flex items-center justify-center gap-2">
+                <Star className="w-8 h-8 fill-primary-yellow text-primary-yellow" aria-hidden="true" />
+                4.9
+              </div>
               <div className="text-white/90 font-medium text-sm md:text-base">Note Moyenne</div>
             </div>
             <div className="backdrop-blur-sm bg-white/10 rounded-3xl p-6 md:p-8 border border-white/20 shadow-xl hover:bg-white/15 transition-all duration-300 hover:scale-105">
