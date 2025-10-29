@@ -34,6 +34,25 @@ export interface IOpeningHours extends Document {
   ordersPerSlot: number; // Number of orders per slot (default: 2)
   createdAt: Date;
   updatedAt: Date;
+
+  // Instance methods
+  timeToMinutes(time: string): number;
+  minutesToTime(minutes: number): string;
+  getHoursForDate(date: Date): { isOpen: boolean; hours?: ITimeRange; reason?: string };
+  isTimeWithinHours(date: Date, time: string): boolean;
+  addException(exception: IException): Promise<IOpeningHours>;
+  removeException(date: Date): Promise<IOpeningHours>;
+}
+
+/**
+ * OpeningHours Model Interface
+ * Includes static methods
+ */
+export interface IOpeningHoursModel extends Model<IOpeningHours> {
+  getAllWithExceptions(): Promise<IOpeningHours[]>;
+  getByDayOfWeek(dayOfWeek: number): Promise<IOpeningHours | null>;
+  isOpenOnDate(date: Date): Promise<boolean>;
+  getExceptionsByDateRange(startDate: Date, endDate: Date): Promise<IException[]>;
 }
 
 /**
@@ -344,8 +363,8 @@ OpeningHoursSchema.virtual('hoursDisplay').get(function () {
 /**
  * Export Model
  */
-const OpeningHours: Model<IOpeningHours> =
-  mongoose.models.OpeningHours ||
-  mongoose.model<IOpeningHours>('OpeningHours', OpeningHoursSchema);
+const OpeningHours: IOpeningHoursModel =
+  (mongoose.models.OpeningHours as IOpeningHoursModel) ||
+  mongoose.model<IOpeningHours, IOpeningHoursModel>('OpeningHours', OpeningHoursSchema);
 
 export default OpeningHours;
