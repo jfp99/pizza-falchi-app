@@ -15,6 +15,21 @@ export interface ITimeSlot extends Document {
   status: 'active' | 'full' | 'closed';
   createdAt: Date;
   updatedAt: Date;
+
+  // Instance methods
+  canAcceptOrder(): boolean;
+  addOrder(orderId: mongoose.Types.ObjectId | string): Promise<ITimeSlot>;
+  removeOrder(orderId: mongoose.Types.ObjectId | string): Promise<ITimeSlot>;
+}
+
+/**
+ * TimeSlot Model Interface
+ * Includes static methods
+ */
+export interface ITimeSlotModel extends Model<ITimeSlot> {
+  findAvailableSlots(date: Date): Promise<ITimeSlot[]>;
+  findNextAvailable(fromDate?: Date): Promise<ITimeSlot | null>;
+  getSlotsByDateRange(startDate: Date, endDate: Date): Promise<ITimeSlot[]>;
 }
 
 /**
@@ -206,7 +221,8 @@ TimeSlotSchema.virtual('remainingCapacity').get(function () {
 /**
  * Export Model
  */
-const TimeSlot: Model<ITimeSlot> =
-  mongoose.models.TimeSlot || mongoose.model<ITimeSlot>('TimeSlot', TimeSlotSchema);
+const TimeSlot: ITimeSlotModel =
+  (mongoose.models.TimeSlot as ITimeSlotModel) ||
+  mongoose.model<ITimeSlot, ITimeSlotModel>('TimeSlot', TimeSlotSchema);
 
 export default TimeSlot;
