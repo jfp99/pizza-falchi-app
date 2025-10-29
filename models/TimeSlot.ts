@@ -152,7 +152,7 @@ TimeSlotSchema.methods.addOrder = async function (
 TimeSlotSchema.methods.removeOrder = async function (
   orderId: mongoose.Types.ObjectId
 ): Promise<ITimeSlot> {
-  const orderIndex = this.orders.findIndex((id) => id.equals(orderId));
+  const orderIndex = this.orders.findIndex((id: mongoose.Types.ObjectId) => id.equals(orderId));
 
   if (orderIndex === -1) {
     throw new Error('Order not found in this time slot');
