@@ -98,6 +98,18 @@ export const orderSchema = z
       .max(500, 'Notes trop longues (maximum 500 caractères)')
       .optional()
       .or(z.literal('')),
+    // Time slot management fields (optional)
+    timeSlot: z
+      .string()
+      .regex(/^[a-f\d]{24}$/i, 'ID de créneau horaire invalide')
+      .optional(),
+    scheduledTime: z.coerce.date().optional(),
+    pickupTimeRange: z
+      .string()
+      .max(50, 'Plage horaire trop longue')
+      .optional(),
+    assignedBy: z.enum(['customer', 'cashier', 'system']).optional(),
+    isManualAssignment: z.boolean().optional(),
   })
   .refine(
     (data) => {
