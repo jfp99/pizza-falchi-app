@@ -1,8 +1,9 @@
 'use client';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { CheckCircle, Package, Truck, Clock, Phone, Mail, MapPin, ArrowRight, Home } from 'lucide-react';
+import { CheckCircle, Package, Clock, Phone, Mail, MapPin, ArrowRight, Home, Loader, Check, X, Truck } from 'lucide-react';
+import { ChefIcon, PizzaSliceIcon } from '@/components/icons/CategoryIcons';
 import { Order } from '@/types';
 
 export default function OrderConfirmation() {
@@ -64,13 +65,13 @@ export default function OrderConfirmation() {
   }
 
   const getStatusDisplay = (status: string) => {
-    const statusMap: Record<string, { label: string; color: string; icon: string }> = {
-      pending: { label: 'En attente', color: 'text-yellow-600', icon: '⏳' },
-      confirmed: { label: 'Confirmée', color: 'text-blue-600', icon: '✅' },
-      preparing: { label: 'En préparation', color: 'text-orange-600', icon: '👨‍🍳' },
-      ready: { label: 'Prête', color: 'text-green-600', icon: '🍕' },
-      completed: { label: 'Terminée', color: 'text-gray-600', icon: '✔️' },
-      cancelled: { label: 'Annulée', color: 'text-red-600', icon: '❌' }
+    const statusMap: Record<string, { label: string; color: string; icon: React.ReactElement }> = {
+      pending: { label: 'En attente', color: 'text-yellow-600', icon: <Clock className="w-5 h-5" /> },
+      confirmed: { label: 'Confirmée', color: 'text-blue-600', icon: <Check className="w-5 h-5" /> },
+      preparing: { label: 'En préparation', color: 'text-orange-600', icon: <ChefIcon size={20} /> },
+      ready: { label: 'Prête', color: 'text-green-600', icon: <PizzaSliceIcon size={20} /> },
+      completed: { label: 'Terminée', color: 'text-gray-600', icon: <CheckCircle className="w-5 h-5" /> },
+      cancelled: { label: 'Annulée', color: 'text-red-600', icon: <X className="w-5 h-5" /> }
     };
     return statusMap[status] || statusMap.pending;
   };
@@ -149,7 +150,10 @@ export default function OrderConfirmation() {
                 </div>
               ) : (
                 <div className="bg-soft-yellow-lighter rounded-2xl p-4">
-                  <p className="font-semibold text-charcoal mb-2">📍 Adresse du food truck</p>
+                  <p className="font-semibold text-charcoal mb-2 flex items-center gap-2">
+                    <MapPin className="w-4 h-4" aria-hidden="true" />
+                    Adresse du food truck
+                  </p>
                   <p className="text-gray-700">
                     615, avenue de la Touloubre<br />
                     13540 Puyricard - Aix en Provence
@@ -271,8 +275,9 @@ export default function OrderConfirmation() {
 
         {/* Thank You Message */}
         <div className="text-center">
-          <p className="text-xl text-gray-600 mb-2">
-            Merci d'avoir choisi Pizza Falchi ! 🍕
+          <p className="text-xl text-gray-600 mb-2 flex items-center justify-center gap-2">
+            Merci d'avoir choisi Pizza Falchi !
+            <PizzaSliceIcon size={24} className="text-primary-red" aria-hidden="true" />
           </p>
           <p className="text-gray-500">
             À très bientôt pour de nouvelles délices italiennes
