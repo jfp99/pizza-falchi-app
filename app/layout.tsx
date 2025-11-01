@@ -8,6 +8,7 @@ import Footer from '@/components/layout/Footer';
 import SkipLink from '@/components/layout/SkipLink';
 import AuthProvider from '@/components/providers/SessionProvider';
 import { CartProvider } from '@/contexts/CartContext';
+import GoogleAnalytics from '@/components/GoogleAnalytics';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -116,6 +117,7 @@ export default function RootLayout({
               }}
             />
             <SpeedInsights />
+            <GoogleAnalytics />
           </CartProvider>
         </AuthProvider>
       </body>
